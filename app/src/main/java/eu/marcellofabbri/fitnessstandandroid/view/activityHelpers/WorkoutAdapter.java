@@ -1,10 +1,15 @@
 package eu.marcellofabbri.fitnessstandandroid.view.activityHelpers;
+import android.graphics.Color;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -15,6 +20,11 @@ import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutHolder> {
   private List<Workout> workouts = new ArrayList<>();
+  private String selectedWorkout;
+
+  public void setSelectedWorkout(String selectedWorkout) {
+    this.selectedWorkout = selectedWorkout;
+  }
 
   @NonNull
   @Override
@@ -26,7 +36,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
   @Override
   public void onBindViewHolder(@NonNull WorkoutAdapter.WorkoutHolder holder, int position) {
     Workout currentWorkout = workouts.get(position);
-    holder.workoutName.setText(currentWorkout.getName());
+    String currentWorkoutName = currentWorkout.getName();
+    holder.workoutName.setText(currentWorkoutName);
+    int color = holder.itemView.getResources().getColor(R.color.workoutItemSelected);
+    if (currentWorkoutName.equals(selectedWorkout)) {
+      CardView cardView = (CardView) holder.itemView;
+      cardView.setCardBackgroundColor(color);
+      holder.workoutName.setTextColor(Color.WHITE);
+    }
   }
 
   @Override

@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     ImageButton addWorkoutButton;
     AddWorkoutDialog addWorkoutDialog;
 
+    String selectedWorkout = "Legs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         workoutAdapter = new WorkoutAdapter();
+        workoutAdapter.setSelectedWorkout(selectedWorkout);
         recyclerView.setAdapter(workoutAdapter);
 
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
@@ -56,5 +59,13 @@ public class MainActivity extends AppCompatActivity {
     public void openDialog() {
         addWorkoutDialog = new AddWorkoutDialog();
         addWorkoutDialog.show(getSupportFragmentManager(), "add workout dialog");
+    }
+
+    public void setColorOfSelectedWorkout(List<Workout> workouts) {
+        for (int i = 0; i < workouts.size(); i++) {
+            if (workouts.get(i).getName() == selectedWorkout) {
+
+            }
+        }
     }
 }
