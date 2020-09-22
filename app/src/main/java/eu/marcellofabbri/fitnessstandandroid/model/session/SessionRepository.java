@@ -33,6 +33,10 @@ public class SessionRepository {
       new DeleteSessionAsyncTask(sessionDao).execute(session);
     }
 
+    public LiveData<List<Session>> getAllSessions() {
+      return allSessions;
+    }
+
     public void deleteSessionByWorkoutName(String workoutName) {
       new DeleteSessionByWorkoutNameAsyncTask(sessionDao).execute(workoutName);
     }

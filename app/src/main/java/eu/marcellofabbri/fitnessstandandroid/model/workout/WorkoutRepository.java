@@ -37,8 +37,12 @@ public class WorkoutRepository {
     new DeleteWorkoutAsyncTask(workoutDao).execute(workout);
   }
 
-  public void getWorkoutByName(String name) {
-    new GetWorkoutByNameAsyncTask(workoutDao).execute(name);
+  public LiveData<List<Workout>> getAllWorkouts() {
+    return allWorkouts;
+  }
+
+  public Workout getWorkoutByName(String name) {
+    return workoutDao.getWorkoutByName(name);
   }
 
   //asyncTask classes (each per method)
@@ -82,16 +86,16 @@ public class WorkoutRepository {
     }
   }
 
-  private static class GetWorkoutByNameAsyncTask extends AsyncTask<String, Void, Void> {
-    private WorkoutDao workoutDao;
-
-    GetWorkoutByNameAsyncTask(WorkoutDao workoutDao) {
-      this.workoutDao = workoutDao;
-    }
-    @Override
-    protected Void doInBackground(String... strings) {
-      workoutDao.getWorkoutByName(strings[0]);
-      return null;
-    }
-  }
+//  private static class GetWorkoutByNameAsyncTask extends AsyncTask<String, Void, Void> {
+//    private WorkoutDao workoutDao;
+//
+//    GetWorkoutByNameAsyncTask(WorkoutDao workoutDao) {
+//      this.workoutDao = workoutDao;
+//    }
+//    @Override
+//    protected Workout doInBackground(String... strings) {
+//      workoutDao.getWorkoutByName(strings[0]);
+//      return null;
+//    }
+//  }
 }
