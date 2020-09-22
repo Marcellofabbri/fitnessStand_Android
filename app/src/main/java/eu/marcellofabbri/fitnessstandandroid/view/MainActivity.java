@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.workoutsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.setHasFixedSize(true);
+
         workoutAdapter = new WorkoutAdapter();
         recyclerView.setAdapter(workoutAdapter);
 

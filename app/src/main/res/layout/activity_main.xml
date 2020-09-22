@@ -27,14 +27,15 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/workoutsList"
-            app:layout_constraintLeft_toRightOf="@id/addWorkoutButton"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/addWorkoutButton"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.8"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/workout_item"/>
+            tools:listitem="@layout/workout_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

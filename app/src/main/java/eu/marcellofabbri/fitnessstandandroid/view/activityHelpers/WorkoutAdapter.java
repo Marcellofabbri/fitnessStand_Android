@@ -25,7 +25,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
 
   @Override
   public void onBindViewHolder(@NonNull WorkoutAdapter.WorkoutHolder holder, int position) {
-
+    Workout currentWorkout = workouts.get(position);
+    holder.workoutName.setText(currentWorkout.getName());
   }
 
   @Override
@@ -51,6 +52,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
 
     public WorkoutHolder(@NonNull View itemView) {
       super(itemView);
+      workoutName = itemView.findViewById(R.id.workoutItemName);
     }
   }
 
