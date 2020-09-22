@@ -1,8 +1,10 @@
-package eu.marcellofabbri.fitnessstandandroid;
+package eu.marcellofabbri.fitnessstandandroid.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import eu.marcellofabbri.fitnessstandandroid.R;
 
 public class MainActivity extends AppCompatActivity {
 
