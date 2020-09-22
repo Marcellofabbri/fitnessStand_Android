@@ -7,5 +7,6 @@
     <color name="activeWorkoutContainer">#EFAD9B</color>
     <color name="calendarContainer">#EFC19B</color>
     <color name="statsContainer">#EFDA9B</color>
+    <color name="workoutItemUnselected">#B8A573</color>
 
 </resources>

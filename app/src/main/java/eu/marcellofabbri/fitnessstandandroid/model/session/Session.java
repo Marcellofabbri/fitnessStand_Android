@@ -1,13 +1,12 @@
 package eu.marcellofabbri.fitnessstandandroid.model.session;
 
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
-import java.time.OffsetDateTime;
 import java.util.Date;
 
-import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
+import eu.marcellofabbri.fitnessstandandroid.utils.EntityFieldConverter;
 
 @Entity(tableName = "session")
 public class Session {
@@ -15,6 +14,7 @@ public class Session {
   @PrimaryKey(autoGenerate = true)
   private long id;
   private long duration;
+  @TypeConverters(EntityFieldConverter.class)
   private Date date;
   private String workoutName;
 
@@ -23,6 +23,8 @@ public class Session {
     this.date = date;
     this.workoutName = workoutName;
   }
+
+  public void setId(long id) { this.id = id; }
 
   public long getId() {
     return id;

@@ -37,4 +37,6 @@ public class WorkoutViewModel extends AndroidViewModel {
     return workoutRepository.getWorkoutByName(name);
   }
 
+  public LiveData<List<Workout>> getAllWorkouts() { return allWorkouts; }
+
 }
