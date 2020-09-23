@@ -48,7 +48,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
   }
 
   private void setCardColor(CardView cardView, int position) {
-    System.out.println(selectedWorkoutIndex);
     if (position == selectedWorkoutIndex) {
       int color = cardView.getResources().getColor(R.color.workoutItemSelected);
       cardView.setCardBackgroundColor(color);
