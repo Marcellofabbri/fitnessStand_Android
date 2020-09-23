@@ -1,4 +1,4 @@
-package eu.marcellofabbri.fitnessstandandroid.view;
+package eu.marcellofabbri.fitnessstandandroid.view.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

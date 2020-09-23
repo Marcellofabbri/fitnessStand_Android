@@ -1,11 +1,8 @@
-package eu.marcellofabbri.fitnessstandandroid.view.activityHelpers;
+package eu.marcellofabbri.fitnessstandandroid.view.adapters;
 import android.graphics.Color;
-import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,17 +17,26 @@ import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutHolder> {
   private List<Workout> workouts = new ArrayList<>();
-  private String selectedWorkout;
+  private OnWorkoutItemListener onWorkoutItemListener;
+  private int selectedWorkoutIndex;
 
-  public void setSelectedWorkout(String selectedWorkout) {
-    this.selectedWorkout = selectedWorkout;
+  public WorkoutAdapter(OnWorkoutItemListener onWorkoutItemListener) {
+    this.onWorkoutItemListener = onWorkoutItemListener;
+  }
+
+  public void setSelectedWorkout(int selectedWorkoutIndex) {
+    this.selectedWorkoutIndex = selectedWorkoutIndex;
+  }
+
+  public int getSelectedWorkoutIndex() {
+    return selectedWorkoutIndex;
   }
 
   @NonNull
   @Override
   public WorkoutAdapter.WorkoutHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.workout_item, parent, false);
-    return new WorkoutHolder(itemView);
+    return new WorkoutHolder(itemView, onWorkoutItemListener);
   }
 
   @Override
@@ -38,11 +44,16 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
     Workout currentWorkout = workouts.get(position);
     String currentWorkoutName = currentWorkout.getName();
     holder.workoutName.setText(currentWorkoutName);
-    int color = holder.itemView.getResources().getColor(R.color.workoutItemSelected);
-    if (currentWorkoutName.equals(selectedWorkout)) {
-      CardView cardView = (CardView) holder.itemView;
+    setCardColor((CardView) holder.itemView, position);
+  }
+
+  private void setCardColor(CardView cardView, int position) {
+    System.out.println(selectedWorkoutIndex);
+    if (position == selectedWorkoutIndex) {
+      int color = cardView.getResources().getColor(R.color.workoutItemSelected);
       cardView.setCardBackgroundColor(color);
-      holder.workoutName.setTextColor(Color.WHITE);
+    } else {
+      cardView.setCardBackgroundColor(Color.WHITE);
     }
   }
 
@@ -64,15 +75,31 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
     return workouts;
   }
 
-  class WorkoutHolder extends RecyclerView.ViewHolder {
-    private TextView workoutName;
+  //VIEW HOLDER
 
-    public WorkoutHolder(@NonNull View itemView) {
+  class WorkoutHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private View itemView;
+    private TextView workoutName;
+    private OnWorkoutItemListener onWorkoutItemListener;
+
+    public WorkoutHolder(@NonNull View itemView, OnWorkoutItemListener onWorkoutItemListener) {
       super(itemView);
+      this.itemView = itemView;
       workoutName = itemView.findViewById(R.id.workoutItemName);
+      this.onWorkoutItemListener = onWorkoutItemListener;
+
+      itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+      onWorkoutItemListener.onWorkoutItemClick(getAdapterPosition());
     }
   }
 
+  public interface OnWorkoutItemListener {
+    void onWorkoutItemClick(int position);
+  }
 
 }
 
