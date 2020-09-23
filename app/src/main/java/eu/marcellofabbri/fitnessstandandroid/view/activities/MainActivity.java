@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     WorkoutViewModel workoutViewModel;
     ImageButton addWorkoutButton;
     AddWorkoutDialog addWorkoutDialog;
+    TextView selectedWorkoutBanner;
 
     List<Workout> workoutsList = new ArrayList<Workout>();
     int selectedWorkoutIndex;
@@ -34,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        addWorkoutButton = findViewById(R.id.addWorkoutButton);
+
+        locateAllViews();
         addWorkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             }
         });
 
-        recyclerView = findViewById(R.id.workoutsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         workoutAdapter = new WorkoutAdapter(this);
@@ -55,8 +57,11 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             public void onChanged(List<Workout> workouts) {
               workoutAdapter.setWorkouts(workouts);
               workoutsList = workouts;
+              renderSelectedWorkoutBanner();
             }
         });
+
+
 
     }
 
@@ -67,16 +72,21 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
 
     @Override
     public void onWorkoutItemClick(int position) {
-        toastForWorkoutSelection(position);
         selectedWorkoutIndex = position;
         workoutAdapter.setSelectedWorkout(selectedWorkoutIndex);
         workoutAdapter.setWorkouts(workoutsList);
+        renderSelectedWorkoutBanner();
     }
 
-    public void toastForWorkoutSelection (int position) {
-        String workoutName = workoutsList.get(position).getName();
-        Toast toast = Toast.makeText(this, workoutName + " selected", Toast.LENGTH_SHORT);
-        toast.show();
+    public void renderSelectedWorkoutBanner() {
+        String selectedWorkoutName = workoutsList.get(selectedWorkoutIndex).getName();
+        selectedWorkoutBanner.setText(selectedWorkoutName.toUpperCase());
+    }
+
+    private void locateAllViews() {
+        addWorkoutButton = findViewById(R.id.addWorkoutButton);
+        selectedWorkoutBanner = findViewById(R.id.selectedWorkoutBanner);
+        recyclerView = findViewById(R.id.workoutsList);
     }
 
 
