@@ -2,6 +2,7 @@ package eu.marcellofabbri.fitnessstandandroid.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     TextView monthYear;
     ImageButton leftChevron;
     ImageButton rightChevron;
+    FragmentManager fragmentManager;
 
     List<Workout> workoutsList = new ArrayList<Workout>();
     int selectedWorkoutIndex;
@@ -50,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         setContentView(R.layout.activity_main);
         locateAllViews();
         calendar = Calendar.getInstance();
-        gridViewSetup = new GridViewSetup(gridView, calendar, this);
+        fragmentManager = getSupportFragmentManager();
+        gridViewSetup = new GridViewSetup(gridView, calendar, MainActivity.this, fragmentManager);
 
         addWorkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
               workoutAdapter.setWorkouts(workouts);
               workoutsList = workouts;
               renderSelectedWorkoutBanner();
+              gridViewSetup.setSelectedWorkout(getSelectedWorkoutNameUpperCase());
             }
         });
 
@@ -94,14 +98,11 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
 
         monthYear.setText(monthAndYear(calendar));
         gridViewSetup.execute();
-//        CalendarAdapter calendarAdapter = new CalendarAdapter(calendar);
-//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.calendar_item, calendarAdapter.itemsForTheGridView());
-//        gridView.setAdapter(arrayAdapter);
     }
 
     public void openDialog() {
         addWorkoutDialog = new AddWorkoutDialog();
-        addWorkoutDialog.show(getSupportFragmentManager(), "add workout dialog");
+        addWorkoutDialog.show(fragmentManager, "add workout dialog");
     }
 
     @Override
@@ -113,8 +114,13 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     }
 
     public void renderSelectedWorkoutBanner() {
-        String selectedWorkoutName = workoutsList.get(selectedWorkoutIndex).getName();
-        selectedWorkoutBanner.setText(selectedWorkoutName.toUpperCase());
+        String selectedWorkoutName = getSelectedWorkoutNameUpperCase();
+        selectedWorkoutBanner.setText(selectedWorkoutName);
+        gridViewSetup.setSelectedWorkout(selectedWorkoutName);
+    }
+
+    public String getSelectedWorkoutNameUpperCase() {
+        return workoutsList.get(selectedWorkoutIndex).getName().toUpperCase();
     }
 
     private void locateAllViews() {
@@ -134,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         return month.toUpperCase() + " " + year;
     }
 
+    private void openAddSessionDialog() {
 
+    }
 
 }

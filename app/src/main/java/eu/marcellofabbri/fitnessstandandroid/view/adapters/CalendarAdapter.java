@@ -23,7 +23,7 @@ public class CalendarAdapter {
     this.finalDayOfTheMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
   }
 
-  private int findEmptyCells(Calendar calendar) {
+  public int findEmptyCells(Calendar calendar) {
     Calendar cal = calendar;
     int day = cal.get(Calendar.DAY_OF_MONTH);
     int year = cal.get(Calendar.YEAR);
