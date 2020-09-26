@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
               workoutAdapter.setWorkouts(workouts);
               workoutsList = workouts;
               renderSelectedWorkoutBanner();
-              gridViewSetup.setSelectedWorkout(getSelectedWorkoutNameUpperCase());
             }
         });
 
@@ -116,11 +116,15 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     public void renderSelectedWorkoutBanner() {
         String selectedWorkoutName = getSelectedWorkoutNameUpperCase();
         selectedWorkoutBanner.setText(selectedWorkoutName);
-        gridViewSetup.setSelectedWorkout(selectedWorkoutName);
+        setSelectedWorkoutInGridViewSetup();
     }
 
     public String getSelectedWorkoutNameUpperCase() {
         return workoutsList.get(selectedWorkoutIndex).getName().toUpperCase();
+    }
+
+    public void setSelectedWorkoutInGridViewSetup() {
+      gridViewSetup.setSelectedWorkout(selectedWorkoutBanner.getText().toString());
     }
 
     private void locateAllViews() {

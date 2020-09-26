@@ -7,25 +7,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import eu.marcellofabbri.fitnessstandandroid.R;
 import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
-import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
+import eu.marcellofabbri.fitnessstandandroid.view.adapters.CalendarAdapter;
 import eu.marcellofabbri.fitnessstandandroid.viewModel.SessionViewModel;
 
 public class AddSessionDialog extends AppCompatDialogFragment {
   private SessionViewModel sessionViewModel;
   private NumberPicker hoursPicker;
   private NumberPicker minutesPicker;
-  private TextView currentDate;
+  private String currentDate;
+  private TextView currentDateTV;
   private TextView duration;
   private int h;
   private int m;
@@ -41,39 +47,53 @@ public class AddSessionDialog extends AppCompatDialogFragment {
 
     final Bundle args = getArguments();
 
-    setDateText(view, args);
+    extractCurrentDateFromArgs(args);
+
+
+    currentDateTV.setText(convertDateFormat(args));
 
     handleHoursPicker(hoursPicker);;
     handleMinutesPicker(minutesPicker);
 
-    String selectedWorkout = args.getString("selectedWorkout");
+    final String selectedWorkout = args.getString("selectedWorkout");
+
 
     builder.setView(view).
-            setTitle("Add" + selectedWorkout + "session")
+            setTitle("Add " + selectedWorkout + " session")
             .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
-
+                //ADD NOTHING, JUST RETURN
               }
             })
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
-                String date = currentDate.getText().toString();
-                Date dateDate = new Date(date);
-                int minutes = durationInMinutes(h, m);
-                String workoutName = args.getString("selectedWorkout", "");
-
-                sessionViewModel.insert(new Session(minutes, dateDate, workoutName));
+                try {
+                  Date date = stringToDate(currentDate);
+                  int minutes = durationInMinutes(h, m);
+                  sessionViewModel.insert(new Session(minutes, date, selectedWorkout));
+                  Toast.makeText(getContext(), selectedWorkout + " session added for " + convertDateFormat(args), Toast.LENGTH_SHORT).show();
+                } catch (ParseException e) {
+                  e.printStackTrace();
+                }
               }
             });
     return builder.create();
   }
 
-  private void setDateText(View view, Bundle args) {
-    String date = args.getString("touchedDate", "Selected date");
-    currentDate = view.findViewById(R.id.currentDate);
-    currentDate.setText(date);
+  private void extractCurrentDateFromArgs(Bundle args) {
+    currentDate = args.getString("currentDate", "Selected date");
+  }
+
+  private String convertDateFormat(Bundle args) {
+    String day = args.getString("day");
+    String month = args.getString("month");
+    String year = args.getString("year");
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+    String fullMonth = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+    return fullMonth + ", " + day + " " + year;
   }
 
   private void handleHoursPicker(NumberPicker picker) {
@@ -83,10 +103,10 @@ public class AddSessionDialog extends AppCompatDialogFragment {
     picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
       @Override
       public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-        h = newVal - 1;
+        h = oldVal;
         String minutes = m < 10 ? ("0" + String.valueOf(m)) : String.valueOf(m);
         String restOfString = ":" + minutes;
-        String newDuration = String.valueOf(newVal) + restOfString;
+        String newDuration = String.valueOf(h) + restOfString;
         duration.setText(newDuration);
       }
     });
@@ -99,12 +119,12 @@ public class AddSessionDialog extends AppCompatDialogFragment {
     picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
       @Override
       public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-        m = newVal - 1;
-        if (newVal <= 9) {
-          String newDuration = h + ":" + "0" + String.valueOf(newVal);
+        m = oldVal;
+        if (oldVal <= 9) {
+          String newDuration = h + ":" + "0" + String.valueOf(m);
           duration.setText(newDuration);
         } else {
-          String newDuration = h + ":" + String.valueOf(newVal);
+          String newDuration = h + ":" + String.valueOf(m);
           duration.setText(newDuration);
         }
       }
@@ -120,5 +140,13 @@ public class AddSessionDialog extends AppCompatDialogFragment {
     duration = view.findViewById(R.id.duration);
     hoursPicker = view.findViewById(R.id.hours_numberpicker);
     minutesPicker = view.findViewById(R.id.minutes_numberpicker);
+    currentDateTV = view.findViewById(R.id.currentDate);
   }
+
+  private Date stringToDate(String stringDate) throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+    Date date = sdf.parse(stringDate);
+    return date;
+  }
+
 }

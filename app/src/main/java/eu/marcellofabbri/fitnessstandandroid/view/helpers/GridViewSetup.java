@@ -35,8 +35,10 @@ public class GridViewSetup {
   }
 
   public void setSelectedWorkout(String workout) {
-    this.selectedWorkout = selectedWorkout;
+    this.selectedWorkout = workout;
   }
+
+  public String getSelectedWorkout() { return this.selectedWorkout; }
 
   public void execute() {
     calendarAdapter = new CalendarAdapter(calendar);
@@ -61,9 +63,11 @@ public class GridViewSetup {
     int month = monthIndex + 1;
     int year = calendar.get(Calendar.YEAR);
     String currentDate = String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(touchedDateInt);
-    args.putString("touchedDate", String.valueOf(touchedDateInt));
+    args.putString("year", String.valueOf(year));
+    args.putString("month", String.valueOf(month));
+    args.putString("day", String.valueOf(touchedDateInt));
     args.putString("currentDate", currentDate);
-    args.putString("selectedWorkout", selectedWorkout);
+    args.putString("selectedWorkout", getSelectedWorkout());
     addSessionDialog.setArguments(args);
     return addSessionDialog;
   }
