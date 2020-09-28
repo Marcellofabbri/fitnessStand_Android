@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     AddWorkoutDialog addWorkoutDialog;
     TextView selectedWorkoutBanner;
     ConstraintLayout calendarContainer;
+    GridView backgroundGridView;
     GridView gridView;
     GridViewSetup gridViewSetup;
     Calendar calendar;

@@ -17,6 +17,7 @@ import eu.marcellofabbri.fitnessstandandroid.R;
 import eu.marcellofabbri.fitnessstandandroid.view.activities.AddSessionDialog;
 import eu.marcellofabbri.fitnessstandandroid.view.activities.MainActivity;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.CalendarAdapter;
+import eu.marcellofabbri.fitnessstandandroid.view.adapters.GridViewAdapter;
 
 public class GridViewSetup {
   private GridView gridView;
@@ -42,12 +43,12 @@ public class GridViewSetup {
 
   public void execute() {
     calendarAdapter = new CalendarAdapter(calendar);
-    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context, R.layout.calendar_item, calendarAdapter.itemsForTheGridView());
-    gridView.setAdapter(arrayAdapter);
+    GridViewAdapter gridViewAdapter = new GridViewAdapter(context, calendarAdapter.itemsForTheGridView());
+    gridView.setAdapter(gridViewAdapter);
     gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(context, String.valueOf(position - 6 - calendarAdapter.findEmptyCells(calendar)), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, String.valueOf(position - 6 - calendarAdapter.emptyCellsBefore1st(calendar)), Toast.LENGTH_SHORT).show();
         DialogFragment dialogFragment = createAddSessionDialog(position);
         dialogFragment.show(fragmentManager, "add session dialog");
         return false;
@@ -58,7 +59,7 @@ public class GridViewSetup {
   private AddSessionDialog createAddSessionDialog(int position) {
     AddSessionDialog addSessionDialog = new AddSessionDialog();
     Bundle args = new Bundle();
-    int touchedDateInt = position - 6 - calendarAdapter.findEmptyCells(calendar);
+    int touchedDateInt = position - 6 - calendarAdapter.emptyCellsBefore1st(calendar);
     int monthIndex = calendar.get(Calendar.MONTH);
     int month = monthIndex + 1;
     int year = calendar.get(Calendar.YEAR);

@@ -19,11 +19,11 @@ public class CalendarAdapter {
 
   public CalendarAdapter(Calendar calendar) {
     this.currentMonth = calendar.get(Calendar.MONTH);
-    this.emptyCells = findEmptyCells(calendar);
+    this.emptyCells = emptyCellsBefore1st(calendar);
     this.finalDayOfTheMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
   }
 
-  public int findEmptyCells(Calendar calendar) {
+  public int emptyCellsBefore1st(Calendar calendar) {
     Calendar cal = calendar;
     int day = cal.get(Calendar.DAY_OF_MONTH);
     int year = cal.get(Calendar.YEAR);
@@ -40,7 +40,21 @@ public class CalendarAdapter {
     for (String s : entireMonthArray()) {
       finalArray.add(s);
     }
+    addEmptyCellsAfterEndOfMonth(finalArray);
+    System.out.println(finalArray);
     return finalArray;
+  }
+
+  private List<String> addEmptyCellsAfterEndOfMonth(List<String> array) {
+    int size = array.size();
+    int finalRowItems = size % 7;
+    int finalRowEmptyCells = 7 - finalRowItems;
+    if (finalRowItems != 0) {
+      for (int i = 0; i < finalRowEmptyCells; i++) {
+        array.add("");
+      }
+    }
+    return array;
   }
 
   private List<String> emptyCellsArray() {
