@@ -1,25 +1,23 @@
 package eu.marcellofabbri.fitnessstandandroid.view.helpers;
 
 import android.content.Context;
-import android.icu.lang.UScript;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import eu.marcellofabbri.fitnessstandandroid.R;
 import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
 import eu.marcellofabbri.fitnessstandandroid.view.activities.AddSessionDialog;
-import eu.marcellofabbri.fitnessstandandroid.view.activities.MainActivity;
+import eu.marcellofabbri.fitnessstandandroid.view.activities.IndividualSessionOverviewFragment;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.CalendarAdapter;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.GridViewAdapter;
 
@@ -31,6 +29,7 @@ public class GridViewSetup {
   private String selectedWorkout;
   private FragmentManager fragmentManager;
   private List<Session> sessionsList;
+  private Calendar calendarTool;
 
   public GridViewSetup(GridView gridView, Calendar calendar, Context context, FragmentManager fragmentManager, List<Session> sessionsList) {
     this.gridView = gridView;
@@ -39,6 +38,7 @@ public class GridViewSetup {
     this.context = context;
     this.fragmentManager = fragmentManager;
     this.sessionsList = sessionsList;
+    this.calendarTool = Calendar.getInstance();
   }
 
   public void setSelectedWorkout(String workout) {
@@ -70,10 +70,20 @@ public class GridViewSetup {
     gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(context, String.valueOf(position - 6 - calendarAdapter.emptyCellsBefore1st(calendar)), Toast.LENGTH_SHORT).show();
         DialogFragment dialogFragment = createAddSessionDialog(position);
         dialogFragment.show(fragmentManager, "add session dialog");
         return false;
+      }
+    });
+    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        int day = gridViewPositionToDayOfMonthConverter(position);
+        Session session = getSessionByDayOfMonth(day);
+        if (session.getDuration() != 0) {
+          DialogFragment dialogFragment = createIndividualSessionOverviewFragment(session);
+          dialogFragment.show(fragmentManager, "session overview dialog");
+        }
       }
     });
   }
@@ -94,4 +104,33 @@ public class GridViewSetup {
     addSessionDialog.setArguments(args);
     return addSessionDialog;
   }
+
+  private int gridViewPositionToDayOfMonthConverter(int position) {
+    return position - 6 - calendarAdapter.emptyCellsBefore1st(calendar);
+  }
+
+  private IndividualSessionOverviewFragment createIndividualSessionOverviewFragment(Session session) {
+    IndividualSessionOverviewFragment individualSessionOverviewFragment = new IndividualSessionOverviewFragment();
+    Bundle args = new Bundle();
+    calendarTool.setTime(session.getDate());
+    String currentDate = calendarTool.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()) + ", " + calendarTool.get(Calendar.DAY_OF_MONTH) + " " + calendarTool.get(Calendar.YEAR);
+    args.putString("currentDate", currentDate);
+    args.putString("selectedWorkout", getSelectedWorkout());
+    args.putString("duration", String.valueOf(session.getDuration()));
+    individualSessionOverviewFragment.setArguments(args);
+    return individualSessionOverviewFragment;
+  }
+
+  private Session getSessionByDayOfMonth(int day) {
+    Session selectedSession = new Session(0, new Date(), "");
+    for (Session session : sessionsList) {
+      calendarTool.setTime(session.getDate());
+      if (day == calendarTool.get(Calendar.DAY_OF_MONTH)) {
+        selectedSession = session;
+      }
+    }
+    return selectedSession;
+  }
+
+
 }
