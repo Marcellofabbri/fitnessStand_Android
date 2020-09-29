@@ -1,6 +1,7 @@
 package eu.marcellofabbri.fitnessstandandroid.view.helpers;
 
 import android.content.Context;
+import android.icu.lang.UScript;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,9 +12,12 @@ import android.widget.Toast;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import eu.marcellofabbri.fitnessstandandroid.R;
+import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
 import eu.marcellofabbri.fitnessstandandroid.view.activities.AddSessionDialog;
 import eu.marcellofabbri.fitnessstandandroid.view.activities.MainActivity;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.CalendarAdapter;
@@ -26,13 +30,15 @@ public class GridViewSetup {
   private Context context;
   private String selectedWorkout;
   private FragmentManager fragmentManager;
+  private List<Session> sessionsList;
 
-  public GridViewSetup(GridView gridView, Calendar calendar, Context context, FragmentManager fragmentManager) {
+  public GridViewSetup(GridView gridView, Calendar calendar, Context context, FragmentManager fragmentManager, List<Session> sessionsList) {
     this.gridView = gridView;
     this.calendarAdapter = new CalendarAdapter(calendar);
     this.calendar = calendar;
     this.context = context;
     this.fragmentManager = fragmentManager;
+    this.sessionsList = sessionsList;
   }
 
   public void setSelectedWorkout(String workout) {
@@ -41,9 +47,25 @@ public class GridViewSetup {
 
   public String getSelectedWorkout() { return this.selectedWorkout; }
 
+  public void setSessionsList(List<Session> sessionsList) {
+    this.sessionsList = sessionsList;
+  }
+
+  public List<Session> filteredSessionsListByMonth() {
+    List<Session> filteredSessionsList = new ArrayList<Session>();
+    int currentMonth = calendar.get(Calendar.MONTH);
+    int currentYear = calendar.get(Calendar.YEAR);
+    for (Session session : sessionsList) {
+      if (session.getDate().getMonth() == currentMonth && session.getDate().getYear() == currentYear-1900) {
+        filteredSessionsList.add(session);
+      }
+    }
+    return filteredSessionsList;
+  }
+
   public void execute() {
     calendarAdapter = new CalendarAdapter(calendar);
-    GridViewAdapter gridViewAdapter = new GridViewAdapter(context, calendarAdapter.itemsForTheGridView());
+    GridViewAdapter gridViewAdapter = new GridViewAdapter(context, calendarAdapter.itemsForTheGridView(), filteredSessionsListByMonth());
     gridView.setAdapter(gridViewAdapter);
     gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
       @Override

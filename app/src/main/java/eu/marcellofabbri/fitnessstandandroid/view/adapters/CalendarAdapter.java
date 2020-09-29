@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
+
 public class CalendarAdapter {
 
   private ArrayList<String> weekDays = new ArrayList(Arrays.asList("S", "M", "T", "W", "T", "F", "S"));
@@ -41,7 +43,6 @@ public class CalendarAdapter {
       finalArray.add(s);
     }
     addEmptyCellsAfterEndOfMonth(finalArray);
-    System.out.println(finalArray);
     return finalArray;
   }
 

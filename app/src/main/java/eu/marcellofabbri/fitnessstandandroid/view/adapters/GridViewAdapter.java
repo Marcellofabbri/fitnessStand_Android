@@ -1,6 +1,7 @@
 package eu.marcellofabbri.fitnessstandandroid.view.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +13,29 @@ import androidx.core.content.ContextCompat;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import eu.marcellofabbri.fitnessstandandroid.R;
+import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
 import eu.marcellofabbri.fitnessstandandroid.view.helpers.GridViewSetup;
 
 public class GridViewAdapter extends BaseAdapter {
   private Context context;
   private List<String> monthDays;
   private LayoutInflater inflater;
+  private List<Session> sessionsList;
+  private Calendar calendarTool;
 
-  public GridViewAdapter(Context context, List<String> monthDays) {
+  public GridViewAdapter(Context context, List<String> monthDays, List<Session> sessionsList) {
     this.context = context;
     this.monthDays = monthDays;
     this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    this.sessionsList = sessionsList;
+    this.calendarTool = Calendar.getInstance();
   }
 
   @Override
@@ -53,9 +63,23 @@ public class GridViewAdapter extends BaseAdapter {
 
     ImageView img = cell.findViewById(R.id.item_imageView);
     TextView tv = cell.findViewById(R.id.item_textView);
-    img.setImageResource(R.drawable.full_squircle);
+    if (daysWithSessions().contains(monthDays.get(position))) {
+      img.setImageResource(R.drawable.full_squircle);
+      tv.setTextColor(Color.WHITE);
+    }
     tv.setText(monthDays.get(position));
 
     return cell;
+  }
+
+  public List<String> daysWithSessions() {
+    List<String> array = new ArrayList<String>();
+    for (Session session : sessionsList) {
+      Date sessionDate = session.getDate();
+      calendarTool.setTime(sessionDate);
+      int sessionDay = calendarTool.get(Calendar.DAY_OF_MONTH);
+      array.add(String.valueOf(sessionDay));
+    }
+    return array;
   }
 }

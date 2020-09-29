@@ -57,7 +57,6 @@ public class AddSessionDialog extends AppCompatDialogFragment {
 
     final String selectedWorkout = args.getString("selectedWorkout");
 
-
     builder.setView(view).
             setTitle("Add " + selectedWorkout + " session")
             .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -144,7 +143,7 @@ public class AddSessionDialog extends AppCompatDialogFragment {
   }
 
   private Date stringToDate(String stringDate) throws ParseException {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     Date date = sdf.parse(stringDate);
     return date;
   }

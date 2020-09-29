@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,16 +23,19 @@ import java.util.List;
 import java.util.Locale;
 
 import eu.marcellofabbri.fitnessstandandroid.R;
+import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
 import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.CalendarAdapter;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.WorkoutAdapter;
 import eu.marcellofabbri.fitnessstandandroid.view.helpers.GridViewSetup;
+import eu.marcellofabbri.fitnessstandandroid.viewModel.SessionViewModel;
 import eu.marcellofabbri.fitnessstandandroid.viewModel.WorkoutViewModel;
 
 public class MainActivity extends AppCompatActivity implements WorkoutAdapter.OnWorkoutItemListener {
     RecyclerView recyclerView;
     WorkoutAdapter workoutAdapter;
     WorkoutViewModel workoutViewModel;
+    SessionViewModel sessionViewModel;
     ImageButton addWorkoutButton;
     AddWorkoutDialog addWorkoutDialog;
     TextView selectedWorkoutBanner;
@@ -46,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     FragmentManager fragmentManager;
 
     List<Workout> workoutsList = new ArrayList<Workout>();
-    int selectedWorkoutIndex;
+    List<Session> sessionsList = new ArrayList<Session>();
+    int selectedWorkoutIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +60,11 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         locateAllViews();
         calendar = Calendar.getInstance();
         fragmentManager = getSupportFragmentManager();
-        gridViewSetup = new GridViewSetup(gridView, calendar, MainActivity.this, fragmentManager);
+        sessionViewModel = ViewModelProviders.of(this).get(SessionViewModel.class);
+        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
+
+
+        gridViewSetup = new GridViewSetup(gridView, calendar, MainActivity.this, fragmentManager, sessionsList);
 
         addWorkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,12 +79,12 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         workoutAdapter.setSelectedWorkout(selectedWorkoutIndex);
         recyclerView.setAdapter(workoutAdapter);
 
-        workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
         workoutViewModel.getAllWorkouts().observe(this, new Observer<List<Workout>>() {
             @Override
             public void onChanged(List<Workout> workouts) {
               workoutAdapter.setWorkouts(workouts);
               workoutsList = workouts;
+              fetchSessions();
               renderSelectedWorkoutBanner();
             }
         });
@@ -112,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         workoutAdapter.setSelectedWorkout(selectedWorkoutIndex);
         workoutAdapter.setWorkouts(workoutsList);
         renderSelectedWorkoutBanner();
+        fetchSessions();
     }
 
     public void renderSelectedWorkoutBanner() {
@@ -145,8 +155,17 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         return month.toUpperCase() + " " + year;
     }
 
-    private void openAddSessionDialog() {
-
+    private void fetchSessions() {
+        sessionViewModel.getByWorkoutName(getSelectedWorkoutNameUpperCase()).observe(this, new Observer<List<Session>>() {
+            @Override
+            public void onChanged(List<Session> sessions) {
+                sessionsList = sessions;
+                if (sessionsList.size() > 0) {
+                    gridViewSetup.setSessionsList(sessions);
+                    gridViewSetup.execute();
+                }
+            }
+        });
     }
 
 }

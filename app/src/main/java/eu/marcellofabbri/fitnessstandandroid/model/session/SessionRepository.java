@@ -41,6 +41,10 @@ public class SessionRepository {
       new DeleteSessionByWorkoutNameAsyncTask(sessionDao).execute(workoutName);
     }
 
+    public LiveData<List<Session>> getByWorkoutName(String workoutName) {
+      return sessionDao.getByWorkoutName(workoutName);
+    }
+
     //asyncTask classes (each per method)
 
     private static class InsertSessionAsyncTask extends AsyncTask<Session, Void, Void> {
