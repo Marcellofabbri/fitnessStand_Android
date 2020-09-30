@@ -29,6 +29,7 @@ public class StatsManager {
     this.calendar = calendar;
     this.sessionsList = sessionsList;
     fillSessionsTV();
+    fillDurationTotTV();
   }
 
   public void fillStatsPeriod() {
@@ -38,6 +39,17 @@ public class StatsManager {
     if (!sessionsList.isEmpty()) {
       int numberOfSessions = filterSessionsByMonth().size();
       sessionsTV.setText(String.valueOf(numberOfSessions));
+    }
+  }
+
+  private void fillDurationTotTV() {
+    if (!sessionsList.isEmpty()) {
+      long totalMinutes = 0;
+      for (Session session : filterSessionsByMonth()) {
+        long duration = session.getDuration();
+        totalMinutes += duration;
+      }
+      durationTotTV.setText(String.valueOf(totalMinutes));
     }
   }
 
