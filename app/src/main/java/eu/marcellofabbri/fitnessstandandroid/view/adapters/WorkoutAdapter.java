@@ -44,15 +44,17 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
     Workout currentWorkout = workouts.get(position);
     String currentWorkoutName = currentWorkout.getName();
     holder.workoutName.setText(currentWorkoutName);
-    setCardColor((CardView) holder.itemView, position);
+    setCardColor((CardView) holder.itemView, holder.workoutName, position);
   }
 
-  private void setCardColor(CardView cardView, int position) {
+  private void setCardColor(CardView cardView, TextView textView, int position) {
     if (position == selectedWorkoutIndex) {
       int color = cardView.getResources().getColor(R.color.workoutItemSelected);
       cardView.setCardBackgroundColor(color);
+      textView.setTextColor(Color.WHITE);
     } else {
       cardView.setCardBackgroundColor(Color.WHITE);
+      textView.setTextColor(Color.DKGRAY);
     }
   }
 
