@@ -28,6 +28,7 @@ import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.CalendarAdapter;
 import eu.marcellofabbri.fitnessstandandroid.view.adapters.WorkoutAdapter;
 import eu.marcellofabbri.fitnessstandandroid.view.helpers.GridViewSetup;
+import eu.marcellofabbri.fitnessstandandroid.view.helpers.StatsManager;
 import eu.marcellofabbri.fitnessstandandroid.viewModel.SessionViewModel;
 import eu.marcellofabbri.fitnessstandandroid.viewModel.WorkoutViewModel;
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     ImageButton leftChevron;
     ImageButton rightChevron;
     FragmentManager fragmentManager;
+    StatsManager statsManager;
 
     List<Workout> workoutsList = new ArrayList<Workout>();
     List<Session> sessionsList = new ArrayList<Session>();
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                 calendar.add(Calendar.MONTH, 1);
                 monthYear.setText(monthAndYear(calendar));
                 gridViewSetup.execute();
+                initializeStatsManager(calendar, sessionsList);
             }
         });
         leftChevron.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                 calendar.add(Calendar.MONTH, -1);
                 monthYear.setText(monthAndYear(calendar));
                 gridViewSetup.execute();
+                initializeStatsManager(calendar, sessionsList);
             }
         });
 
@@ -163,9 +167,17 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                 if (sessionsList.size() > 0) {
                     gridViewSetup.setSessionsList(sessions);
                     gridViewSetup.execute();
+                    statsManager = initializeStatsManager(calendar, sessionsList);
                 }
             }
         });
+    }
+
+    private StatsManager initializeStatsManager(Calendar calendar, List<Session> sessionsList) {
+        TextView sessionTV = findViewById(R.id.sessions_number);
+        TextView durationTotTV = findViewById(R.id.duration_tot_number);
+        View statsPeriodContainer = findViewById(R.id.statsPeriod);
+        return new StatsManager(MainActivity.this, sessionTV, durationTotTV, statsPeriodContainer, calendar, sessionsList);
     }
 
 }
