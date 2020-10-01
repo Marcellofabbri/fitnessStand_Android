@@ -37,8 +37,8 @@ public class SessionRepository {
       return allSessions;
     }
 
-    public void deleteSessionByWorkoutName(String workoutName) {
-      new DeleteSessionByWorkoutNameAsyncTask(sessionDao).execute(workoutName);
+    public void deleteSessionByWorkoutId(Long workoutId) {
+      new DeleteSessionByWorkoutIdAsyncTask(sessionDao).execute(workoutId);
     }
 
     public LiveData<List<Session>> getByWorkoutName(String workoutName) {
@@ -86,15 +86,15 @@ public class SessionRepository {
       }
     }
 
-    private static class DeleteSessionByWorkoutNameAsyncTask extends AsyncTask<String, Void, Void> {
+    private static class DeleteSessionByWorkoutIdAsyncTask extends AsyncTask<Long, Void, Void> {
       private SessionDao sessionDao;
 
-      DeleteSessionByWorkoutNameAsyncTask(SessionDao sessionDao) {
+      DeleteSessionByWorkoutIdAsyncTask(SessionDao sessionDao) {
         this.sessionDao = sessionDao;
       }
       @Override
-      protected Void doInBackground(String... strings) {
-        sessionDao.deleteSessionsByWorkoutName(strings[0]);
+      protected Void doInBackground(Long... longs) {
+        sessionDao.deleteSessionsByWorkoutId(longs[0]);
         return null;
       }
     }

@@ -28,6 +28,6 @@ public interface SessionDao {
   @Query("SELECT * FROM session WHERE workoutName=:workoutName")
   LiveData<List<Session>> getByWorkoutName(String workoutName);
 
-  @Query("DELETE FROM session WHERE workoutName=:workoutName")
-  void deleteSessionsByWorkoutName(String workoutName);
+  @Query("DELETE FROM session WHERE id=:id")
+  void deleteSessionsByWorkoutId(long id);
 }

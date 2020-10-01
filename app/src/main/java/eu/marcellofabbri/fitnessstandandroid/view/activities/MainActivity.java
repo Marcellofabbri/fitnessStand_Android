@@ -1,6 +1,7 @@
 package eu.marcellofabbri.fitnessstandandroid.view.activities;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     WorkoutViewModel workoutViewModel;
     SessionViewModel sessionViewModel;
     ImageButton addWorkoutButton;
+    ImageButton editButton;
+    ImageButton deleteButton;
     AddWorkoutDialog addWorkoutDialog;
     TextView selectedWorkoutBanner;
     ConstraintLayout calendarContainer;
@@ -92,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
               if (!workouts.isEmpty()) {
                   fetchSessions();
                   renderSelectedWorkoutBanner();
+                  addClickListenerToEditButton();
+                  addClickListenerToDeleteButton();
                   initializeStatsManager(calendar, sessionsList);
               }
             }
@@ -103,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                 calendar.add(Calendar.MONTH, 1);
                 monthYear.setText(monthAndYear(calendar));
                 gridViewSetup.execute();
-                initializeStatsManager(calendar, sessionsList);
+                if (workoutsList.size() > 0) { initializeStatsManager(calendar, sessionsList); }
             }
         });
         leftChevron.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                 calendar.add(Calendar.MONTH, -1);
                 monthYear.setText(monthAndYear(calendar));
                 gridViewSetup.execute();
-                initializeStatsManager(calendar, sessionsList);
+                if (workoutsList.size() > 0) { initializeStatsManager(calendar, sessionsList); }
             }
         });
 
@@ -131,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         workoutAdapter.setSelectedWorkout(selectedWorkoutIndex);
         workoutAdapter.setWorkouts(workoutsList);
         renderSelectedWorkoutBanner();
+        addClickListenerToEditButton();
+        addClickListenerToDeleteButton();
         fetchSessions();
         initializeStatsManager(calendar, sessionsList);
     }
@@ -138,22 +146,6 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     public void renderSelectedWorkoutBanner() {
         final String selectedWorkoutName = getSelectedWorkoutNameUpperCase();
         selectedWorkoutBanner.setText(selectedWorkoutName);
-        selectedWorkoutBanner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String sessionsTarget = String.valueOf(workoutsList.get(selectedWorkoutIndex).getWeeklyTarget());
-                String durationTarget = String.valueOf(workoutsList.get(selectedWorkoutIndex).getDurationTarget());
-                long originalId = workoutsList.get(selectedWorkoutIndex).getId();
-                Bundle args = new Bundle();
-                args.putString("workoutName", selectedWorkoutName);
-                args.putString("sessionsTarget", sessionsTarget);
-                args.putString("durationTarget", durationTarget);
-                args.putLong("originalId", originalId);
-                addWorkoutDialog = new AddWorkoutDialog("update");
-                addWorkoutDialog.setArguments(args);
-                addWorkoutDialog.show(fragmentManager, "edit workout dialog");
-            }
-        });
         setSelectedWorkoutInGridViewSetup();
     }
 
@@ -165,6 +157,52 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
       gridViewSetup.setSelectedWorkout(selectedWorkoutBanner.getText().toString());
     }
 
+    public void addClickListenerToEditButton() {
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sessionsTarget = String.valueOf(workoutsList.get(selectedWorkoutIndex).getWeeklyTarget());
+                String durationTarget = String.valueOf(workoutsList.get(selectedWorkoutIndex).getDurationTarget());
+                long originalId = workoutsList.get(selectedWorkoutIndex).getId();
+                Bundle args = new Bundle();
+                args.putString("workoutName", getSelectedWorkoutNameUpperCase());
+                args.putString("sessionsTarget", sessionsTarget);
+                args.putString("durationTarget", durationTarget);
+                args.putLong("originalId", originalId);
+                addWorkoutDialog = new AddWorkoutDialog("update");
+                addWorkoutDialog.setArguments(args);
+                addWorkoutDialog.show(fragmentManager, "edit workout dialog");
+            }
+        });
+    }
+
+    public void addClickListenerToDeleteButton() {
+        final Workout workout = workoutsList.get(selectedWorkoutIndex);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Delete " + workout.getName() + " workout?")
+                        .setMessage("Do you want to delete " + workout.getName() + " workout and all of its sessions permanently?\nThe deletion is irreversible.")
+                        .setNegativeButton("DON'T DELETE", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sessionViewModel.deleteSessionByWorkoutId(workout.getId());
+                                workoutViewModel.delete(workout);
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+    }
+
     private void locateAllViews() {
         addWorkoutButton = findViewById(R.id.addWorkoutButton);
         selectedWorkoutBanner = findViewById(R.id.selectedWorkoutBanner);
@@ -174,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         monthYear = findViewById(R.id.monthYear);
         leftChevron = findViewById(R.id.chevron_left);
         rightChevron = findViewById(R.id.chevron_right);
+        editButton = findViewById(R.id.edit_workout);
+        deleteButton = findViewById(R.id.delete_workout);
     }
 
     private String monthAndYear(Calendar calendar) {
@@ -187,11 +227,9 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             @Override
             public void onChanged(List<Session> sessions) {
                 sessionsList = sessions;
-
-                    gridViewSetup.setSessionsList(sessions);
-                    gridViewSetup.execute();
-                    initializeStatsManager(calendar, sessionsList);
-
+                gridViewSetup.setSessionsList(sessions);
+                gridViewSetup.execute();
+                initializeStatsManager(calendar, sessionsList);
             }
         });
     }

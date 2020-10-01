@@ -96,7 +96,6 @@ public class StatsManager {
       int unit = 100 / monthlyTarget;
       sessionGauge.setStartValue(0);
       sessionGauge.setEndValue(monthlyTarget);
-      //sessionGauge.setPointSize(filterSessionsByMonth().size());
       sessionGauge.setValue(filterSessionsByMonth().size());
     } else {
       sessionGauge.setValue(0);
