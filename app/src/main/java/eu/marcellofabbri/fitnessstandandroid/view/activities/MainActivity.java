@@ -1,5 +1,6 @@
 package eu.marcellofabbri.fitnessstandandroid.view.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -31,6 +33,7 @@ import eu.marcellofabbri.fitnessstandandroid.view.helpers.GridViewSetup;
 import eu.marcellofabbri.fitnessstandandroid.view.helpers.StatsManager;
 import eu.marcellofabbri.fitnessstandandroid.viewModel.SessionViewModel;
 import eu.marcellofabbri.fitnessstandandroid.viewModel.WorkoutViewModel;
+import pl.pawelkleczkowski.customgauge.CustomGauge;
 
 public class MainActivity extends AppCompatActivity implements WorkoutAdapter.OnWorkoutItemListener {
     RecyclerView recyclerView;
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
               if (!workouts.isEmpty()) {
                   fetchSessions();
                   renderSelectedWorkoutBanner();
+                  initializeStatsManager(calendar, sessionsList);
               }
             }
         });
@@ -128,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         workoutAdapter.setWorkouts(workoutsList);
         renderSelectedWorkoutBanner();
         fetchSessions();
+        initializeStatsManager(calendar, sessionsList);
     }
 
     public void renderSelectedWorkoutBanner() {
@@ -182,20 +187,22 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             @Override
             public void onChanged(List<Session> sessions) {
                 sessionsList = sessions;
-                if (sessionsList.size() > 0) {
+
                     gridViewSetup.setSessionsList(sessions);
                     gridViewSetup.execute();
-                    statsManager = initializeStatsManager(calendar, sessionsList);
-                }
+                    initializeStatsManager(calendar, sessionsList);
+
             }
         });
     }
 
-    private StatsManager initializeStatsManager(Calendar calendar, List<Session> sessionsList) {
+    private void initializeStatsManager(Calendar calendar, List<Session> sessionsList) {
         TextView sessionTV = findViewById(R.id.sessions_number);
         TextView durationTotTV = findViewById(R.id.duration_tot_number);
         View statsPeriodContainer = findViewById(R.id.statsPeriod);
-        return new StatsManager(MainActivity.this, sessionTV, durationTotTV, statsPeriodContainer, calendar, sessionsList);
+        TextView sessionsTarget = findViewById(R.id.target_body);
+        CustomGauge sessionsGauge = findViewById(R.id.target_gauge);
+        statsManager =  new StatsManager(MainActivity.this, sessionTV, durationTotTV, statsPeriodContainer, sessionsTarget, sessionsGauge, calendar, sessionsList, workoutsList.get(selectedWorkoutIndex));
     }
 
 }

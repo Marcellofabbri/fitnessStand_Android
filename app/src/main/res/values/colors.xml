@@ -10,5 +10,8 @@
     <color name="workoutItemUnselected">#FFFFFF</color>
     <color name="workoutItemSelected">#6BCF54</color>
     <color name="targetButtonText">#5471CF</color>
+    <color name="redGauge">#D80000</color>
+    <color name="amberGauge">#FFEE00</color>
+    <color name="greenGauge">#48C500</color>
 
 </resources>
