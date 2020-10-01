@@ -9,5 +9,6 @@
     <color name="statsContainer">#EFDA9B</color>
     <color name="workoutItemUnselected">#FFFFFF</color>
     <color name="workoutItemSelected">#6BCF54</color>
+    <color name="targetButtonText">#5471CF</color>
 
 </resources>

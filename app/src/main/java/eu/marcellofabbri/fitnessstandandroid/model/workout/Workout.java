@@ -9,9 +9,13 @@ public class Workout {
   @PrimaryKey(autoGenerate = true)
   private long id;
   private String name;
+  private int weeklyTarget;
+  private int durationTarget;
 
-  public Workout(String name) {
+  public Workout(String name, int weeklyTarget, int durationTarget) {
     this.name = name;
+    this.weeklyTarget = weeklyTarget;
+    this.durationTarget = durationTarget;
   }
 
   public long getId() {
@@ -26,5 +30,21 @@ public class Workout {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public int getWeeklyTarget() {
+    return weeklyTarget;
+  }
+
+  public void setWeeklyTarget(int weeklyTarget) {
+    this.weeklyTarget = weeklyTarget;
+  }
+
+  public int getDurationTarget() {
+    return durationTarget;
+  }
+
+  public void setDurationTarget(int durationTarget) {
+    this.durationTarget = durationTarget;
   }
 }

@@ -22,7 +22,7 @@ import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
 import eu.marcellofabbri.fitnessstandandroid.model.workout.WorkoutDao;
 
 
-@androidx.room.Database(entities = {Workout.class, Session.class}, version = 1)
+@androidx.room.Database(entities = {Workout.class, Session.class}, version = 2)
 public abstract class Database extends RoomDatabase {
 
   private static Database instance;
@@ -61,8 +61,8 @@ public abstract class Database extends RoomDatabase {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected Void doInBackground(Void...voids) {
-      workoutDao.insert(new Workout("workoutName"));
-      sessionDao.insert(new Session(45, new Date(), "workoutName"));
+//      workoutDao.insert(new Workout("workoutName"));
+//      sessionDao.insert(new Session(45, new Date(), "workoutName"));
       return null;
     }
   }

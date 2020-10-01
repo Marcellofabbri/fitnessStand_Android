@@ -86,8 +86,10 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             public void onChanged(List<Workout> workouts) {
               workoutAdapter.setWorkouts(workouts);
               workoutsList = workouts;
-              fetchSessions();
-              renderSelectedWorkoutBanner();
+              if (!workouts.isEmpty()) {
+                  fetchSessions();
+                  renderSelectedWorkoutBanner();
+              }
             }
         });
 
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     }
 
     public void openDialog() {
-        addWorkoutDialog = new AddWorkoutDialog();
+        addWorkoutDialog = new AddWorkoutDialog("create");
         addWorkoutDialog.show(fragmentManager, "add workout dialog");
     }
 
@@ -129,8 +131,24 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     }
 
     public void renderSelectedWorkoutBanner() {
-        String selectedWorkoutName = getSelectedWorkoutNameUpperCase();
+        final String selectedWorkoutName = getSelectedWorkoutNameUpperCase();
         selectedWorkoutBanner.setText(selectedWorkoutName);
+        selectedWorkoutBanner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sessionsTarget = String.valueOf(workoutsList.get(selectedWorkoutIndex).getWeeklyTarget());
+                String durationTarget = String.valueOf(workoutsList.get(selectedWorkoutIndex).getDurationTarget());
+                long originalId = workoutsList.get(selectedWorkoutIndex).getId();
+                Bundle args = new Bundle();
+                args.putString("workoutName", selectedWorkoutName);
+                args.putString("sessionsTarget", sessionsTarget);
+                args.putString("durationTarget", durationTarget);
+                args.putLong("originalId", originalId);
+                addWorkoutDialog = new AddWorkoutDialog("update");
+                addWorkoutDialog.setArguments(args);
+                addWorkoutDialog.show(fragmentManager, "edit workout dialog");
+            }
+        });
         setSelectedWorkoutInGridViewSetup();
     }
 
