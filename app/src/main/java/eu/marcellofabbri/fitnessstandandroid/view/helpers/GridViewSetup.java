@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -70,8 +71,11 @@ public class GridViewSetup {
     gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        DialogFragment dialogFragment = createAddSessionDialog(position);
-        dialogFragment.show(fragmentManager, "add session dialog");
+        int touchedDateInt = position - 6 - calendarAdapter.emptyCellsBefore1st(calendar);
+        if (!sessionsDatesList().contains(touchedDateInt)) {
+          DialogFragment dialogFragment = createAddSessionDialog(position);
+          dialogFragment.show(fragmentManager, "add session dialog");
+        }
         return false;
       }
     });
@@ -132,5 +136,14 @@ public class GridViewSetup {
     return selectedSession;
   }
 
+  private List<Integer> sessionsDatesList() {
+    List<Integer> array = new ArrayList<>();
+    for (Session session : sessionsList) {
+      calendarTool.setTime(session.getDate());
+      int day = calendarTool.get(Calendar.DAY_OF_MONTH);
+      array.add(day);
+    }
+    return array;
+  }
 
 }

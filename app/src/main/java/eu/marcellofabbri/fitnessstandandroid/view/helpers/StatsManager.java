@@ -1,22 +1,15 @@
 package eu.marcellofabbri.fitnessstandandroid.view.helpers;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import eu.marcellofabbri.fitnessstandandroid.R;
 import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
 import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -27,25 +20,32 @@ public class StatsManager {
   private TextView durationTotTV;
   private TextView sessionsTarget;
   private CustomGauge sessionGauge;
+  private TextView durationAvgTV;
+  private LinearLayout barContainer;
   private View statsPeriodContainer;
   private Calendar calendar;
   private List<Session> sessionsList = new ArrayList<>();
   private Workout selectedWorkout;
+  DecimalFormat df = new DecimalFormat("0.00");
 
-  public StatsManager(Context context, TextView sessionsTV, TextView durationTotTV, View statsPeriodContainer, TextView sessionsTarget, CustomGauge sessionGauge, Calendar calendar, List<Session> sessionsList, Workout selectedWorkout) {
+  public StatsManager(Context context, TextView sessionsTV, TextView durationTotTV, View statsPeriodContainer, TextView sessionsTarget, CustomGauge sessionGauge, TextView durationAvgTV, LinearLayout barContainer, Calendar calendar, List<Session> sessionsList, Workout selectedWorkout) {
     this.context = context;
     this.sessionsTV = sessionsTV;
     this.durationTotTV = durationTotTV;
     this.statsPeriodContainer = statsPeriodContainer;
     this.sessionsTarget = sessionsTarget;
     this.sessionGauge = sessionGauge;
+    this.durationAvgTV = durationAvgTV;
+    this.barContainer = barContainer;
     this.calendar = calendar;
     this.sessionsList = sessionsList;
     this.selectedWorkout = selectedWorkout;
     fillSessionsTV();
     fillDurationTotTV();
-    fillSessionsTarget();
+    fillSessionsTargetMonthly();
     arrangeSessionGauge();
+    fillAverageDuration();
+    createBar();
   }
 
   public void fillStatsPeriod() {
@@ -60,13 +60,18 @@ public class StatsManager {
     }
   }
 
-  private void fillDurationTotTV() {
+  private long getDurationTotTV() {
     long totalMinutes = 0;
     for (Session session : filterSessionsByMonth()) {
       long duration = session.getDuration();
       totalMinutes += duration;
     }
-    durationTotTV.setText(String.valueOf(totalMinutes));
+    return totalMinutes;
+  }
+
+  private void fillDurationTotTV() {
+    long duration = getDurationTotTV();
+    durationTotTV.setText(String.valueOf(duration) + "\"");
   }
 
   private List<Session> filterSessionsByMonth() {
@@ -81,10 +86,9 @@ public class StatsManager {
     return relevantSessions;
   }
 
-  private void fillSessionsTarget() {
-    double weeklyTarget = (double) selectedWorkout.getWeeklyTarget();
-    double monthlyTarget = (weeklyTarget * 52)/12;
-    DecimalFormat df = new DecimalFormat("0.00");
+  private void fillSessionsTargetMonthly() {
+    int weeklyTarget = selectedWorkout.getWeeklyTarget();
+    double monthlyTarget = ((double) weeklyTarget * 52)/12;
     sessionsTarget.setText(df.format(monthlyTarget));
   }
 
@@ -100,6 +104,27 @@ public class StatsManager {
     } else {
       sessionGauge.setValue(0);
     }
+  }
+
+  private double getAverageDuration() {
+    double totalDuration = getDurationTotTV();
+    double numberOfSessions = filterSessionsByMonth().size();
+    double averageDuration = numberOfSessions != 0 ? totalDuration/numberOfSessions : 0;
+    return averageDuration;
+  }
+
+  private void fillAverageDuration() {
+    double averageDuration = getAverageDuration();
+    durationAvgTV.setText(df.format(averageDuration) + "\"");
+  }
+
+  private void createBar() {
+    int barContainerHeight = barContainer.getHeight();
+    int barContainerWidth = barContainer.getWidth();
+    double avgDurationTarget = selectedWorkout.getDurationTarget();
+    barContainer.removeAllViewsInLayout();
+    Bar bar = new Bar(barContainerHeight, barContainerWidth, context, getAverageDuration(), avgDurationTarget);
+    barContainer.addView(bar);
   }
 
 }

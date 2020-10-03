@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,6 +100,10 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                   addClickListenerToEditButton();
                   addClickListenerToDeleteButton();
                   initializeStatsManager(calendar, sessionsList);
+              } else {
+                  selectedWorkoutBanner.setText("");
+                  editButton.setOnClickListener(null);
+                  deleteButton.setOnClickListener(null);
               }
             }
         });
@@ -193,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                sessionViewModel.deleteSessionByWorkoutId(workout.getId());
+                                sessionViewModel.deleteSessionByWorkoutName(workout.getName());
                                 workoutViewModel.delete(workout);
                             }
                         });
@@ -240,7 +245,22 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         View statsPeriodContainer = findViewById(R.id.statsPeriod);
         TextView sessionsTarget = findViewById(R.id.target_body);
         CustomGauge sessionsGauge = findViewById(R.id.target_gauge);
-        statsManager =  new StatsManager(MainActivity.this, sessionTV, durationTotTV, statsPeriodContainer, sessionsTarget, sessionsGauge, calendar, sessionsList, workoutsList.get(selectedWorkoutIndex));
+        TextView durationAvgTV = findViewById(R.id.duration_avg_body);
+        LinearLayout barContainer = findViewById(R.id.barContainer);
+        if (workoutsList.size() > 0) {
+            statsManager =  new StatsManager(
+                    MainActivity.this,
+                    sessionTV,
+                    durationTotTV,
+                    statsPeriodContainer,
+                    sessionsTarget,
+                    sessionsGauge,
+                    durationAvgTV,
+                    barContainer,
+                    calendar,
+                    sessionsList,
+                    workoutsList.get(selectedWorkoutIndex));
+        }
     }
 
 }

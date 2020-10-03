@@ -38,8 +38,8 @@ public class SessionViewModel extends AndroidViewModel {
     return sessionRepository.getAllSessions();
   }
 
-  public void deleteSessionByWorkoutId(Long workoutId) {
-    sessionRepository.deleteSessionByWorkoutId(workoutId);
+  public void deleteSessionByWorkoutName(String workoutName) {
+    sessionRepository.deleteSessionByWorkoutName(workoutName);
   }
 
   public LiveData<List<Session>> getByWorkoutName(String workoutName) {
