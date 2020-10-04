@@ -1,15 +1,25 @@
 package eu.marcellofabbri.fitnessstandandroid.view.helpers;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
+import eu.marcellofabbri.fitnessstandandroid.R;
 import eu.marcellofabbri.fitnessstandandroid.model.session.Session;
 import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -22,17 +32,17 @@ public class StatsManager {
   private CustomGauge sessionGauge;
   private TextView durationAvgTV;
   private LinearLayout barContainer;
-  private View statsPeriodContainer;
+  private TextView statsPeriod;
   private Calendar calendar;
   private List<Session> sessionsList = new ArrayList<>();
   private Workout selectedWorkout;
   DecimalFormat df = new DecimalFormat("0.00");
 
-  public StatsManager(Context context, TextView sessionsTV, TextView durationTotTV, View statsPeriodContainer, TextView sessionsTarget, CustomGauge sessionGauge, TextView durationAvgTV, LinearLayout barContainer, Calendar calendar, List<Session> sessionsList, Workout selectedWorkout) {
+  public StatsManager(Context context, TextView sessionsTV, TextView durationTotTV, TextView statsPeriod, TextView sessionsTarget, CustomGauge sessionGauge, TextView durationAvgTV, LinearLayout barContainer, Calendar calendar, List<Session> sessionsList, Workout selectedWorkout) {
     this.context = context;
     this.sessionsTV = sessionsTV;
     this.durationTotTV = durationTotTV;
-    this.statsPeriodContainer = statsPeriodContainer;
+    this.statsPeriod = statsPeriod;
     this.sessionsTarget = sessionsTarget;
     this.sessionGauge = sessionGauge;
     this.durationAvgTV = durationAvgTV;
@@ -40,6 +50,7 @@ public class StatsManager {
     this.calendar = calendar;
     this.sessionsList = sessionsList;
     this.selectedWorkout = selectedWorkout;
+    fillStatsPeriodContainer();
     fillSessionsTV();
     fillDurationTotTV();
     fillSessionsTargetMonthly();
@@ -48,12 +59,16 @@ public class StatsManager {
     createBar();
   }
 
-  public void fillStatsPeriod() {
+  public void fillStatsPeriodContainer() {
+    String month = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+    int year = calendar.get(Calendar.YEAR);
+    String text = month.toUpperCase() + " " + year + " STATS";
+    statsPeriod.setText(text);
   }
 
   private void fillSessionsTV() {
     if (!sessionsList.isEmpty()) {
-      int numberOfSessions = filterSessionsByMonth().size();
+      int numberOfSessions = filterSessionsByPeriod().size();
       sessionsTV.setText(String.valueOf(numberOfSessions));
     } else {
       sessionsTV.setText("0");
@@ -62,7 +77,7 @@ public class StatsManager {
 
   private long getDurationTotTV() {
     long totalMinutes = 0;
-    for (Session session : filterSessionsByMonth()) {
+    for (Session session : filterSessionsByPeriod()) {
       long duration = session.getDuration();
       totalMinutes += duration;
     }
@@ -74,7 +89,7 @@ public class StatsManager {
     durationTotTV.setText(String.valueOf(duration) + "\"");
   }
 
-  private List<Session> filterSessionsByMonth() {
+  private List<Session> filterSessionsByPeriod() {
     List<Session> relevantSessions = new ArrayList<Session>();
     int currentMonth = calendar.get(Calendar.MONTH);
     for (Session session : sessionsList) {
@@ -100,15 +115,18 @@ public class StatsManager {
       int unit = 100 / monthlyTarget;
       sessionGauge.setStartValue(0);
       sessionGauge.setEndValue(monthlyTarget);
-      sessionGauge.setValue(filterSessionsByMonth().size());
+      sessionGauge.setValue(filterSessionsByPeriod().size());
     } else {
+      sessionGauge.setStartValue(0);
+      sessionGauge.setEndValue(1);
       sessionGauge.setValue(0);
+      if (filterSessionsByPeriod().size() > 0) { sessionGauge.setValue(1); }
     }
   }
 
   private double getAverageDuration() {
     double totalDuration = getDurationTotTV();
-    double numberOfSessions = filterSessionsByMonth().size();
+    double numberOfSessions = filterSessionsByPeriod().size();
     double averageDuration = numberOfSessions != 0 ? totalDuration/numberOfSessions : 0;
     return averageDuration;
   }
@@ -126,5 +144,7 @@ public class StatsManager {
     Bar bar = new Bar(barContainerHeight, barContainerWidth, context, getAverageDuration(), avgDurationTarget);
     barContainer.addView(bar);
   }
+
+
 
 }

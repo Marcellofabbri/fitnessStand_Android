@@ -54,7 +54,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutH
       cardView.setCardBackgroundColor(color);
       textView.setTextColor(Color.WHITE);
     } else {
-      cardView.setCardBackgroundColor(Color.WHITE);
+      int color = cardView.getResources().getColor(R.color.workoutItemUnselected);
+      cardView.setCardBackgroundColor(color);
       textView.setTextColor(Color.DKGRAY);
     }
   }

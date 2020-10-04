@@ -127,7 +127,7 @@ public class GridViewSetup {
 
   private Session getSessionByDayOfMonth(int day) {
     Session selectedSession = new Session(0, new Date(), "");
-    for (Session session : sessionsList) {
+    for (Session session : filteredSessionsListByMonth()) {
       calendarTool.setTime(session.getDate());
       if (day == calendarTool.get(Calendar.DAY_OF_MONTH)) {
         selectedSession = session;
@@ -138,7 +138,7 @@ public class GridViewSetup {
 
   private List<Integer> sessionsDatesList() {
     List<Integer> array = new ArrayList<>();
-    for (Session session : sessionsList) {
+    for (Session session : filteredSessionsListByMonth()) {
       calendarTool.setTime(session.getDate());
       int day = calendarTool.get(Calendar.DAY_OF_MONTH);
       array.add(day);

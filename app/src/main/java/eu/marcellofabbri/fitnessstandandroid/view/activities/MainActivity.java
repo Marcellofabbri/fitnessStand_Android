@@ -19,6 +19,9 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     AddWorkoutDialog addWorkoutDialog;
     TextView selectedWorkoutBanner;
     ConstraintLayout calendarContainer;
-    GridView backgroundGridView;
     GridView gridView;
     GridViewSetup gridViewSetup;
     Calendar calendar;
@@ -200,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                             public void onClick(DialogInterface dialog, int which) {
                                 sessionViewModel.deleteSessionByWorkoutName(workout.getName());
                                 workoutViewModel.delete(workout);
+                                selectedWorkoutIndex = 0;
                             }
                         });
                 AlertDialog dialog = builder.create();
@@ -234,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                 sessionsList = sessions;
                 gridViewSetup.setSessionsList(sessions);
                 gridViewSetup.execute();
-                initializeStatsManager(calendar, sessionsList);
             }
         });
     }
@@ -242,17 +244,17 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     private void initializeStatsManager(Calendar calendar, List<Session> sessionsList) {
         TextView sessionTV = findViewById(R.id.sessions_number);
         TextView durationTotTV = findViewById(R.id.duration_tot_number);
-        View statsPeriodContainer = findViewById(R.id.statsPeriod);
         TextView sessionsTarget = findViewById(R.id.target_body);
         CustomGauge sessionsGauge = findViewById(R.id.target_gauge);
         TextView durationAvgTV = findViewById(R.id.duration_avg_body);
         LinearLayout barContainer = findViewById(R.id.barContainer);
+        TextView statsPeriod = findViewById(R.id.statsPeriod);
         if (workoutsList.size() > 0) {
             statsManager =  new StatsManager(
                     MainActivity.this,
                     sessionTV,
                     durationTotTV,
-                    statsPeriodContainer,
+                    statsPeriod,
                     sessionsTarget,
                     sessionsGauge,
                     durationAvgTV,

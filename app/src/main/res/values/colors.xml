@@ -6,12 +6,15 @@
     <color name="workoutsContainer">#D69C9C</color>
     <color name="activeWorkoutContainer">#EFAD9B</color>
     <color name="calendarContainer">#EFC19B</color>
-    <color name="statsContainer">#EFDA9B</color>
-    <color name="workoutItemUnselected">#FFFFFF</color>
-    <color name="workoutItemSelected">#6BCF54</color>
+    <color name="statsHeader">#EFCD9B</color>
+    <color name="statsContainer">#EDD999</color>
+    <color name="statsContainer2">#EDD099</color>
+    <color name="workoutItemUnselected">#E6E3E3</color>
+    <color name="workoutItemSelected">#57A844</color>
     <color name="targetButtonText">#5471CF</color>
     <color name="redGauge">#D80000</color>
     <color name="amberGauge">#EF6F06</color>
     <color name="greenGauge">#48C500</color>
+    <color name="week">#54A0FF</color>
 
 </resources>
