@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.marcellofabbri.fitnessstandandroid.R;
 import eu.marcellofabbri.fitnessstandandroid.model.workout.Workout;
@@ -32,10 +34,20 @@ public class AddWorkoutDialog extends AppCompatDialogFragment {
   private TextView monthEquivalence;
   private EditText inputWorkoutDurationTarget;
   private String mode;
+  private List<String> workoutNames;
   private long originalId;
 
-  public AddWorkoutDialog(String mode) {
+  public AddWorkoutDialog(String mode, List<Workout> workoutList) {
     this.mode = mode;
+    this.workoutNames = getWorkoutNames(workoutList);
+  }
+
+  private List<String> getWorkoutNames(List<Workout> workoutList) {
+    List<String> namesList = new ArrayList<String>();
+    for (Workout workout : workoutList) {
+      namesList.add(workout.getName());
+    }
+    return namesList;
   }
 
   @NonNull
@@ -74,6 +86,8 @@ public class AddWorkoutDialog extends AppCompatDialogFragment {
 
                   if (workoutName.equals("")) {
                     Toast.makeText(getContext(), "Couldn't add a workout without a name", Toast.LENGTH_LONG).show();
+                  } else if (workoutNames.contains(workoutName.toUpperCase())) {
+                    Toast.makeText(getContext(), "A workout with this name already exists", Toast.LENGTH_LONG).show();
                   } else {
                     if (mode.equals("create")) {
                       workoutViewModel.insert(new Workout(workoutName.toUpperCase(), sessionsTargetInt, durationTargetInt));
@@ -83,6 +97,7 @@ public class AddWorkoutDialog extends AppCompatDialogFragment {
                       workout.setId(args.getLong("originalId"));
                       workoutViewModel.update(workout);
                       Toast.makeText(getContext(), "Session updated: " + workoutName, Toast.LENGTH_SHORT).show();
+                      ((MainActivity) getActivity()).onWorkoutItemClick(0);
                     }
                   }
 

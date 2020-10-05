@@ -334,7 +334,7 @@
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/duration_avg_block"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="0"
+            android:text="0.00"
             android:textAlignment="viewStart"
             android:gravity="center"
             android:textSize="30sp"

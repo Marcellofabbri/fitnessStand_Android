@@ -1,10 +1,12 @@
 package eu.marcellofabbri.fitnessstandandroid.view.activities;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -16,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -24,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
 
     List<Workout> workoutsList = new ArrayList<Workout>();
     List<Session> sessionsList = new ArrayList<Session>();
+    MutableLiveData<List<Workout>> mutableWorkoutsList = new MutableLiveData<>();
+    MutableLiveData<List<Session>> mutableSessionsList = new MutableLiveData<>();
     int selectedWorkoutIndex = 0;
 
     @Override
@@ -75,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         sessionViewModel = ViewModelProviders.of(this).get(SessionViewModel.class);
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(getDrawable(R.drawable.fitness_stand_logo));
+        actionBar.setTitle("");
 
         gridViewSetup = new GridViewSetup(gridView, calendar, MainActivity.this, fragmentManager, sessionsList);
 
@@ -97,18 +106,24 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
               workoutAdapter.setWorkouts(workouts);
               workoutsList = workouts;
               if (!workouts.isEmpty()) {
+                  mutableWorkoutsList.setValue(workouts);
                   fetchSessions();
                   renderSelectedWorkoutBanner();
+                  initializeStatsManager(calendar, sessionsList);
                   addClickListenerToEditButton();
                   addClickListenerToDeleteButton();
-                  initializeStatsManager(calendar, sessionsList);
+
               } else {
+                  mutableWorkoutsList.setValue(workouts);
                   selectedWorkoutBanner.setText("");
                   editButton.setOnClickListener(null);
                   deleteButton.setOnClickListener(null);
               }
             }
         });
+
+        observeWorkoutsList();
+        observeSessionsList();
 
         rightChevron.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     }
 
     public void openDialog() {
-        addWorkoutDialog = new AddWorkoutDialog("create");
+        addWorkoutDialog = new AddWorkoutDialog("create", mutableWorkoutsList.getValue());
         addWorkoutDialog.show(fragmentManager, "add workout dialog");
     }
 
@@ -157,7 +172,11 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     }
 
     public String getSelectedWorkoutNameUpperCase() {
-        return workoutsList.get(selectedWorkoutIndex).getName().toUpperCase();
+        if (workoutsList.size() > 0) {
+            return workoutsList.get(selectedWorkoutIndex).getName().toUpperCase();
+        } else {
+            return "";
+        }
     }
 
     public void setSelectedWorkoutInGridViewSetup() {
@@ -176,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                 args.putString("sessionsTarget", sessionsTarget);
                 args.putString("durationTarget", durationTarget);
                 args.putLong("originalId", originalId);
-                addWorkoutDialog = new AddWorkoutDialog("update");
+                addWorkoutDialog = new AddWorkoutDialog("update", mutableWorkoutsList.getValue());
                 addWorkoutDialog.setArguments(args);
                 addWorkoutDialog.show(fragmentManager, "edit workout dialog");
             }
@@ -184,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     }
 
     public void addClickListenerToDeleteButton() {
-        final Workout workout = workoutsList.get(selectedWorkoutIndex);
+        List<Workout> workouts = mutableWorkoutsList.getValue();
+        final Workout workout = workouts.get(selectedWorkoutIndex);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                             public void onClick(DialogInterface dialog, int which) {
                                 sessionViewModel.deleteSessionByWorkoutName(workout.getName());
                                 workoutViewModel.delete(workout);
-                                selectedWorkoutIndex = 0;
+                                MainActivity.this.onWorkoutItemClick(0);
                             }
                         });
                 AlertDialog dialog = builder.create();
@@ -235,8 +255,10 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             @Override
             public void onChanged(List<Session> sessions) {
                 sessionsList = sessions;
+                mutableSessionsList.setValue(sessions);
                 gridViewSetup.setSessionsList(sessions);
                 gridViewSetup.execute();
+                initializeStatsManager(calendar, sessions);
             }
         });
     }
@@ -249,7 +271,8 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         TextView durationAvgTV = findViewById(R.id.duration_avg_body);
         LinearLayout barContainer = findViewById(R.id.barContainer);
         TextView statsPeriod = findViewById(R.id.statsPeriod);
-        if (workoutsList.size() > 0) {
+        if (mutableWorkoutsList.getValue().size() > 0) {
+            System.out.println("initialized StatsManager");
             statsManager =  new StatsManager(
                     MainActivity.this,
                     sessionTV,
@@ -261,8 +284,55 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                     barContainer,
                     calendar,
                     sessionsList,
-                    workoutsList.get(selectedWorkoutIndex));
+                    mutableWorkoutsList.getValue().get(selectedWorkoutIndex));
+        } else {
+            System.out.println("called default zero");
+            sessionsGauge.setValue(0);
+            sessionsTarget.setText("0.00");
+            durationAvgTV.setText("0.00");
+            durationTotTV.setText("0");
+            sessionTV.setText("0");
+            barContainer.removeAllViewsInLayout();
         }
     }
+
+    private MutableLiveData<List<Workout>> wrapMutableWorkoutsList(List<Workout> workouts) {
+        MutableLiveData<List<Workout>> mutableList = new MutableLiveData<>();
+        mutableList.setValue(workouts);
+        return mutableList;
+    }
+
+    private MutableLiveData<List<Session>> wrapMutableSessionsList(List<Session> sessions) {
+        MutableLiveData<List<Session>> mutableList = new MutableLiveData<>();
+        mutableList.setValue(sessions);
+        return mutableList;
+    }
+
+    private void observeSessionsList() {
+        mutableSessionsList.observe(MainActivity.this, new Observer<List<Session>>() {
+            @Override
+            public void onChanged(List<Session> sessions) {
+                initializeStatsManager(calendar, sessions);
+            }
+        });
+    }
+
+    private void observeWorkoutsList() {
+        mutableWorkoutsList.observe(MainActivity.this, new Observer<List<Workout>>() {
+            @Override
+            public void onChanged(List<Workout> workouts) {
+                workoutAdapter.setWorkouts(workouts);
+                renderSelectedWorkoutBanner();
+
+                if (workouts.size() > 0) {
+                    addClickListenerToEditButton();
+                    addClickListenerToDeleteButton();
+                }
+                fetchSessions();
+                initializeStatsManager(calendar, sessionsList);
+            }
+        });
+    }
+
 
 }
