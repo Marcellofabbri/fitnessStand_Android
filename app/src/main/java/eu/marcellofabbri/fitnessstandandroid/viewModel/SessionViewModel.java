@@ -45,4 +45,6 @@ public class SessionViewModel extends AndroidViewModel {
   public LiveData<List<Session>> getByWorkoutName(String workoutName) {
     return sessionRepository.getByWorkoutName(workoutName);
   }
+
+  public void deleteById(long id) { sessionRepository.deleteById(id); }
 }

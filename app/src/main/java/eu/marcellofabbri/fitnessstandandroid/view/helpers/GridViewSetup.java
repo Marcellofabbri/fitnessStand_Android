@@ -121,6 +121,7 @@ public class GridViewSetup {
     args.putString("currentDate", currentDate);
     args.putString("selectedWorkout", getSelectedWorkout());
     args.putString("duration", String.valueOf(session.getDuration()));
+    args.putLong("id", session.getId());
     individualSessionOverviewFragment.setArguments(args);
     return individualSessionOverviewFragment;
   }

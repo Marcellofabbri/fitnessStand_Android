@@ -30,4 +30,7 @@ public interface SessionDao {
 
   @Query("DELETE FROM session WHERE workoutName=:workoutName")
   void deleteSessionsByWorkoutName(String workoutName);
+
+  @Query("DELETE FROM session WHERE id=:id")
+  void deleteById(long id);
 }

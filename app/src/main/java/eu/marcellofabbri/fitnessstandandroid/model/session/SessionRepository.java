@@ -45,6 +45,10 @@ public class SessionRepository {
       return sessionDao.getByWorkoutName(workoutName);
     }
 
+    public void deleteById(long id) {
+      new DeleteSessionByIdAsyncTask(sessionDao).execute(id);
+    }
+
     //asyncTask classes (each per method)
 
     private static class InsertSessionAsyncTask extends AsyncTask<Session, Void, Void> {
@@ -98,5 +102,18 @@ public class SessionRepository {
         return null;
       }
     }
+
+  private static class DeleteSessionByIdAsyncTask extends AsyncTask<Long, Void, Void> {
+    private SessionDao sessionDao;
+
+    DeleteSessionByIdAsyncTask(SessionDao sessionDao) {
+      this.sessionDao = sessionDao;
+    }
+    @Override
+    protected Void doInBackground(Long... longs) {
+      sessionDao.deleteById(longs[0]);
+      return null;
+    }
+  }
 
 }
