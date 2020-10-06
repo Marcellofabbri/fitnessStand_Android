@@ -1,6 +1,6 @@
 # Fitness Stand v. 1.0.2
 ![Get it on Google Play](https://lh3.googleusercontent.com/cjsqrWQKJQp9RFO7-hJ9AfpKzbUb_Y84vXfjlP0iRHBvladwAfXih984olktDhPnFqyZ0nu9A5jvFwOEQPXzv7hr3ce3QVsLN8kQ2Ao=s0)
-Submitted. Pending approval.
+Submitted to the store. Pending approval (ETA: a week).
 
 <p align="center">
   <img width="1024" height="230" src="https://github.com/Marcellofabbri/fitnessStand_Android/blob/master/app/src/main/res/drawable/fitness_stand_logo_justice.png">
@@ -9,7 +9,7 @@ Submitted. Pending approval.
 A mobile (Android) app that lets the user log their workout sessions and organize them per workout type. The name is a pun on a court's witness stand. Fitness Stand will testify about the user's performance and paint a picture meant to indicate how they're faring against their self-set standards.
 
 
-![screenshots](https://github.com/Marcellofabbri/dailyroadmap/blob/master/app/src/main/res/screenshots/four_screenshots.png)
+![screenshots](https://github.com/Marcellofabbri/fitnessStand_Android/blob/master/app/src/main/res/drawable/github_screenshots.png)
 
 ### Requirements
 Running the app on a laptop normally requires [Android Studio](https://developer.android.com/studio), through which it can be installed and run on an emulator. It might be possible to run it with different IDEs as long as [Java Development Kit](https://www.oracle.com/java/technologies/javase-downloads.html) is installed.
