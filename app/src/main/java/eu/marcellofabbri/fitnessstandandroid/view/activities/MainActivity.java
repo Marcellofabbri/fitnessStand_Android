@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
     GridViewSetup gridViewSetup;
     Calendar calendar;
     TextView monthYear;
+    TextView suggestion;
     ImageButton leftChevron;
     ImageButton rightChevron;
     FragmentManager fragmentManager;
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(getDrawable(R.drawable.fitness_stand_logo_2));
+        actionBar.setBackgroundDrawable(getDrawable(R.drawable.fitness_stand_logo_justice));
         actionBar.setTitle("");
 
         gridViewSetup = new GridViewSetup(gridView, calendar, MainActivity.this, fragmentManager, sessionsList);
@@ -242,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         rightChevron = findViewById(R.id.chevron_right);
         editButton = findViewById(R.id.edit_workout);
         deleteButton = findViewById(R.id.delete_workout);
+        suggestion = findViewById(R.id.suggestion);
     }
 
     private String monthAndYear(Calendar calendar) {
@@ -267,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         TextView sessionTV = findViewById(R.id.sessions_number);
         TextView durationTotTV = findViewById(R.id.duration_tot_number);
         TextView sessionsTarget = findViewById(R.id.target_body);
+        TextView sessionsTargetWeekly = findViewById(R.id.target_weekly);
         CustomGauge sessionsGauge = findViewById(R.id.target_gauge);
         TextView durationAvgTV = findViewById(R.id.duration_avg_body);
         LinearLayout barContainer = findViewById(R.id.barContainer);
@@ -279,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
                     durationTotTV,
                     statsPeriod,
                     sessionsTarget,
+                    sessionsTargetWeekly,
                     sessionsGauge,
                     durationAvgTV,
                     barContainer,
@@ -289,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             System.out.println("called default zero");
             sessionsGauge.setValue(0);
             sessionsTarget.setText("0.00");
+            sessionsTargetWeekly.setText("0 / week");
             durationAvgTV.setText("0.00");
             durationTotTV.setText("0");
             sessionTV.setText("0");
@@ -323,8 +329,10 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
             public void onChanged(List<Workout> workouts) {
                 workoutAdapter.setWorkouts(workouts);
                 renderSelectedWorkoutBanner();
+                suggestion.setTextColor(Color.DKGRAY);
 
                 if (workouts.size() > 0) {
+                    suggestion.setTextColor(Color.TRANSPARENT);
                     addClickListenerToEditButton();
                     addClickListenerToDeleteButton();
                 }

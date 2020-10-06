@@ -68,7 +68,6 @@ public class AddWorkoutDialog extends AppCompatDialogFragment {
     }
 
     builder.setView(view)
-            .setTitle(mode.equals("create") ? "Add workout" : "Edit workout")
             .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {

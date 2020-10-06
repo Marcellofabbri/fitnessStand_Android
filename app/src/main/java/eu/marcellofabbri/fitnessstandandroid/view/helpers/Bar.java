@@ -122,11 +122,10 @@ public class Bar extends View {
     // first 20 units empty
     // 110 units filled with the drawn line
     // last 20 units empty
-    int unit = height / 150;
-    int topMargin = 20 * unit;
+    int unit = height / 120;
     int halfWidth = width / 2;
     for (int i = 1; i <= 110; i++) {
-      MyPoint point = new MyPoint(halfWidth, topMargin + (110 * unit) - (unit * i), i);
+      MyPoint point = new MyPoint(halfWidth, 110 * unit - (unit * i), i);
       points.add(point);
     }
 

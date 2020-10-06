@@ -72,7 +72,7 @@ public class GridViewSetup {
       @Override
       public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         int touchedDateInt = position - 6 - calendarAdapter.emptyCellsBefore1st(calendar);
-        if (!sessionsDatesList().contains(touchedDateInt)) {
+        if (!sessionsDatesList().contains(touchedDateInt) && selectedWorkout != "") {
           DialogFragment dialogFragment = createAddSessionDialog(position);
           dialogFragment.show(fragmentManager, "add session dialog");
         }

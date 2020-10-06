@@ -2,16 +2,21 @@ package eu.marcellofabbri.fitnessstandandroid.view.activities;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.appcompat.widget.Toolbar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +38,7 @@ public class AddSessionDialog extends AppCompatDialogFragment {
   private String currentDate;
   private TextView currentDateTV;
   private TextView duration;
+  private TextView title;
   private int h;
   private int m;
 
@@ -49,16 +55,15 @@ public class AddSessionDialog extends AppCompatDialogFragment {
 
     extractCurrentDateFromArgs(args);
 
-
     currentDateTV.setText(convertDateFormat(args));
 
     handleHoursPicker(hoursPicker);;
     handleMinutesPicker(minutesPicker);
 
     final String selectedWorkout = args.getString("selectedWorkout");
+    title.setText(selectedWorkout);
 
-    builder.setView(view).
-            setTitle("Add " + selectedWorkout + " session")
+    builder.setView(view)
             .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
@@ -118,6 +123,8 @@ public class AddSessionDialog extends AppCompatDialogFragment {
     picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
       @Override
       public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        System.out.println("oldVal: " + String.valueOf(oldVal));
+        System.out.println("newVal: " + String.valueOf(newVal));
         m = oldVal;
         if (oldVal <= 9) {
           String newDuration = h + ":" + "0" + String.valueOf(m);
@@ -136,6 +143,7 @@ public class AddSessionDialog extends AppCompatDialogFragment {
   }
 
   private void findViews(View view) {
+    title = view.findViewById(R.id.addSessionFragmentTitle);
     duration = view.findViewById(R.id.duration);
     hoursPicker = view.findViewById(R.id.hours_numberpicker);
     minutesPicker = view.findViewById(R.id.minutes_numberpicker);

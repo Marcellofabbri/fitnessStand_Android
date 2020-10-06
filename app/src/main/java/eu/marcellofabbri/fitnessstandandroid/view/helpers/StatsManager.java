@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +31,7 @@ public class StatsManager {
   private TextView sessionsTV;
   private TextView durationTotTV;
   private TextView sessionsTarget;
+  private TextView sessionsTargetWeekly;
   private CustomGauge sessionGauge;
   private TextView durationAvgTV;
   private LinearLayout barContainer;
@@ -38,12 +41,13 @@ public class StatsManager {
   private Workout selectedWorkout;
   DecimalFormat df = new DecimalFormat("0.00");
 
-  public StatsManager(Context context, TextView sessionsTV, TextView durationTotTV, TextView statsPeriod, TextView sessionsTarget, CustomGauge sessionGauge, TextView durationAvgTV, LinearLayout barContainer, Calendar calendar, List<Session> sessionsList, Workout selectedWorkout) {
+  public StatsManager(Context context, TextView sessionsTV, TextView durationTotTV, TextView statsPeriod, TextView sessionsTarget, TextView sessionsTargetWeekly, CustomGauge sessionGauge, TextView durationAvgTV, LinearLayout barContainer, Calendar calendar, List<Session> sessionsList, Workout selectedWorkout) {
     this.context = context;
     this.sessionsTV = sessionsTV;
     this.durationTotTV = durationTotTV;
     this.statsPeriod = statsPeriod;
     this.sessionsTarget = sessionsTarget;
+    this.sessionsTargetWeekly = sessionsTargetWeekly;
     this.sessionGauge = sessionGauge;
     this.durationAvgTV = durationAvgTV;
     this.barContainer = barContainer;
@@ -54,6 +58,7 @@ public class StatsManager {
     fillSessionsTV();
     fillDurationTotTV();
     fillSessionsTargetMonthly();
+    fillSessionsTargetWeekly();
     arrangeSessionGauge();
     fillAverageDuration();
     createBar();
@@ -105,6 +110,12 @@ public class StatsManager {
     int weeklyTarget = selectedWorkout.getWeeklyTarget();
     double monthlyTarget = ((double) weeklyTarget * 52)/12;
     sessionsTarget.setText(df.format(monthlyTarget));
+  }
+
+  private void fillSessionsTargetWeekly() {
+    int weeklyTarget = selectedWorkout.getWeeklyTarget();
+    String target = String.valueOf(weeklyTarget) + " / week";
+    sessionsTargetWeekly.setText(target);
   }
 
   protected void arrangeSessionGauge() {

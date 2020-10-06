@@ -38,7 +38,7 @@ public class IndividualSessionOverviewFragment extends AppCompatDialogFragment {
     long sessionId = args.getLong("id");
     deleteButton.setOnClickListener(onClickListenerForDeletion(sessionId));
 
-    builder.setView(view).setTitle("Session").setNegativeButton("RETURN", new DialogInterface.OnClickListener() {
+    builder.setView(view).setNegativeButton("RETURN", new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         // DO NOTHING, JUST RETURN

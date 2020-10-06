@@ -3,11 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     android:orientation="vertical"
     android:padding="15dp">
 
-    <EditText
+    <TextView
+        android:id="@+id/addWorkoutFragmentTitle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/calendarContainer"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/input_workoutName"
+        android:text="WORKOUT"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginHorizontal="13dp"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        app:layout_constraintTop_toBottomOf="@id/addWorkoutFragmentTitle"
         app:layout_constraintBottom_toTopOf="@id/input_workoutSessionsTargetWeek"
         android:id="@+id/input_workoutName"
         android:layout_width="match_parent"
@@ -15,6 +31,8 @@
         android:hint="Name"
         android:maxLength="12"
         android:inputType="text"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_marginHorizontal="16dp"/>
 
     <EditText
@@ -23,28 +41,41 @@
         android:id="@+id/input_workoutSessionsTargetWeek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="How many sessions in a week?"
+        android:hint="Sessions / week"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/colorPrimaryDark"
         android:inputType="number"
         android:layout_marginHorizontal="16dp"/>
 
     <TextView
         app:layout_constraintTop_toBottomOf="@id/input_workoutSessionsTargetWeek"
-        app:layout_constraintBottom_toTopOf="@id/input_workoutDurationTarget"
         android:id="@+id/month_equivalence"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""
-        android:layout_marginHorizontal="16dp"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Sessions per week"
+
+        android:layout_marginHorizontal="20dp"/>
 
     <EditText
         app:layout_constraintTop_toBottomOf="@id/month_equivalence"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/input_workoutDurationTarget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Target duration in minutes of each session>"
+        android:hint="Minutes / session"
+        android:textColor="@color/colorPrimaryDark"
         android:inputType="number"
+        android:layout_marginTop="15dp"
         android:layout_marginHorizontal="16dp"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/input_workoutDurationTarget"
+        android:id="@+id/duration_target_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Session's duration in minutes"
+        android:layout_marginHorizontal="20dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

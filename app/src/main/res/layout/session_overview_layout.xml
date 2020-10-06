@@ -5,12 +5,28 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/addWorkoutFragmentTitle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/calendarContainer"
+        android:text="SESSION"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginHorizontal="25dp"
+        android:textStyle="bold"
+        />
+
+    <TextView
         android:layout_marginHorizontal="25dp"
         android:textSize="20sp"
         android:id="@+id/overview_workoutName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WorkoutName" />
+        android:text="WorkoutName"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/colorPrimaryDark"/>
 
     <TextView
         android:layout_marginHorizontal="25dp"
@@ -18,7 +34,8 @@
         android:id="@+id/overview_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Date" />
+        android:text="Date"
+        android:textColor="@color/colorPrimaryDark"/>
 
     <TextView
         android:layout_marginHorizontal="25dp"
@@ -26,7 +43,8 @@
         android:id="@+id/overview_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Duration" />
+        android:text="Duration"
+        android:textColor="@color/colorPrimaryDark"/>
 
     <ImageButton
         android:id="@+id/delete_session"
@@ -35,6 +53,7 @@
         android:src="@drawable/ic_delete_forever_black_24dp"
         android:background="@android:color/transparent"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="5dp" />
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp" />
 
 </LinearLayout>
