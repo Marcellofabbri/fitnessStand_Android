@@ -1,6 +1,7 @@
 # Fitness Stand v. 1.0.2
-![Get it on Google Play](https://lh3.googleusercontent.com/cjsqrWQKJQp9RFO7-hJ9AfpKzbUb_Y84vXfjlP0iRHBvladwAfXih984olktDhPnFqyZ0nu9A5jvFwOEQPXzv7hr3ce3QVsLN8kQ2Ao=s0)
-Submitted to the store. Pending approval (ETA: a week).
+<a href="https://play.google.com/store/apps/details?id=eu.marcellofabbri.fitnessstandandroid">
+  <img  height="60" src="https://play.google.com/intl/en_gb/badges/static/images/badges/en_badge_web_generic.png">
+</a>
 
 <p align="center">
   <img width="1024" height="230" src="https://github.com/Marcellofabbri/fitnessStand_Android/blob/master/app/src/main/res/drawable/fitness_stand_logo_justice.png">
