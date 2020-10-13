@@ -3,7 +3,7 @@
 Submitted to the store. Pending approval (ETA: a week).
 
 <p align="center">
-  <img width="1024" height="230" src="https://github.com/Marcellofabbri/fitnessStand_Android/blob/master/app/src/main/res/drawable/fitness_stand_logo_justice.png">
+  <img width="1024" height="230" src="https://github.com/Marcellofabbri/fitnessStand_Android/blob/master/app/src/main/res/drawable/fitness_stand_logo_2.png">
 </p>
 
 A mobile (Android) app that lets the user log their workout sessions and organize them per workout type. The name is a pun on a court's witness stand. Fitness Stand will testify about the user's performance and paint a picture meant to indicate how they're faring against their self-set standards.
