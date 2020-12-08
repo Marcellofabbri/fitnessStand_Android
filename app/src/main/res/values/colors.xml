@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#B53701</color>
+    <color name="colorPrimaryMedium">#CA0808</color>
     <color name="colorPrimaryDark">#B30000</color>
     <color name="colorPrimaryLight">#FFBABA</color>
     <color name="colorAccent">#DA5203</color>
@@ -19,5 +20,6 @@
     <color name="greenGauge">#48C500</color>
     <color name="week">#54A0FF</color>
     <color name="titles">#FFFFFF</color>
+    <color name="paleYellow">#e7ddc9</color>
 
 </resources>

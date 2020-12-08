@@ -63,6 +63,9 @@ public class GridViewAdapter extends BaseAdapter {
 
     ImageView img = cell.findViewById(R.id.item_imageView);
     TextView tv = cell.findViewById(R.id.item_textView);
+    if (position < 7) {
+      tv.setTextColor(context.getColor(R.color.colorPrimaryDark));
+    }
     if (daysWithSessions().contains(monthDays.get(position))) {
       img.setImageResource(R.drawable.full_squircle);
       tv.setTextColor(Color.WHITE);

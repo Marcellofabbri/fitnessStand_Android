@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutAdapter.On
         workoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setBackgroundDrawable(getDrawable(R.drawable.fitness_stand_logo_2));
+        actionBar.setBackgroundDrawable(getDrawable(R.drawable.fitness_stand_logo_7));
         actionBar.setTitle("");
 
         gridViewSetup = new GridViewSetup(gridView, calendar, MainActivity.this, fragmentManager, sessionsList);

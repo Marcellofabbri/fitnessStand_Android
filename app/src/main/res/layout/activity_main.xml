@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:textSize="40sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/colorPrimaryMedium"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -133,6 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MONTH YEAR"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     app:layout_constraintLeft_toRightOf="@+id/chevron_left"
                     app:layout_constraintTop_toTopOf="parent"
@@ -189,7 +190,7 @@
         app:layout_constraintTop_toBottomOf="@id/calendarContainer"
         app:layout_constraintHeight_percent="0.30"
         app:layout_constraintWidth_percent="1"
-        android:background="@color/workoutItemUnselected"/>
+        android:background="@color/colorPrimary"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/statsContainer"
@@ -199,8 +200,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/calendarContainer"
-        app:layout_constraintHeight_percent="0.29"
-        app:layout_constraintWidth_percent="0.98"
+        app:layout_constraintHeight_percent="0.295"
+        app:layout_constraintWidth_percent="0.99"
         android:background="@color/statsContainer">
 
         <TextView
@@ -212,9 +213,9 @@
             android:layout_width="0dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/titles"
+            android:textColor="@color/colorPrimaryDark"
             android:gravity="center"
-            android:backgroundTint="@color/statsContainer2"
+            android:backgroundTint="@android:color/white"
             app:layout_constraintHeight_percent="0.2"
             app:layout_constraintWidth_percent="1.0" />
 
@@ -226,6 +227,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:text="SESSIONS"
             android:background="@color/statsContainer"
+            android:textColor="@color/colorPrimaryDark"
             android:gravity="center"
             app:layout_constraintWidth_percent="0.5"
             app:layout_constraintHeight_percent="0.1" />
@@ -285,6 +287,7 @@
             app:layout_constraintWidth_percent="0.5"
             app:layout_constraintHeight_percent="0.1"
             android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
             android:text="TOTAL DURATION"
             android:background="@color/statsContainer"/>
 
@@ -309,6 +312,7 @@
             app:layout_constraintTop_toBottomOf="@id/statsPeriod"
             app:layout_constraintRight_toRightOf="parent"
             android:text="TARGET"
+            android:textColor="@color/colorPrimaryDark"
             android:background="@color/statsHeader"
             android:gravity="center"
             app:layout_constraintWidth_percent="0.5"
@@ -361,6 +365,7 @@
             app:layout_constraintWidth_percent="0.5"
             app:layout_constraintHeight_percent="0.1"
             android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
             android:text="AVERAGE DURATION"
             android:background="@color/statsHeader"/>
 
