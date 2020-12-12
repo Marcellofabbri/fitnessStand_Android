@@ -2,6 +2,7 @@ package eu.marcellofabbri.fitnessstandandroid.view.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,10 +65,11 @@ public class GridViewAdapter extends BaseAdapter {
     ImageView img = cell.findViewById(R.id.item_imageView);
     TextView tv = cell.findViewById(R.id.item_textView);
     if (position < 7) {
-      tv.setTextColor(context.getColor(R.color.colorPrimaryDark));
+      tv.setTextColor(context.getColor(R.color.greenTitles));
+      tv.setTypeface(null, Typeface.BOLD);
     }
     if (daysWithSessions().contains(monthDays.get(position))) {
-      img.setImageResource(R.drawable.full_squircle);
+      img.setImageResource(R.drawable.full_squircle_blue);
       tv.setTextColor(Color.WHITE);
     }
     tv.setText(monthDays.get(position));

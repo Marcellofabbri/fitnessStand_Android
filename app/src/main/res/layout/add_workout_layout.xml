@@ -17,7 +17,7 @@
         android:text="WORKOUT"
         android:textSize="20sp"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/greenTitles"
         android:layout_marginHorizontal="13dp"
         android:textStyle="bold"
         />
@@ -32,7 +32,7 @@
         android:maxLength="12"
         android:inputType="text"
         android:layout_marginTop="15dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/greenTitles"
         android:layout_marginHorizontal="16dp"/>
 
     <EditText
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:hint="Sessions / week"
         android:layout_marginTop="15dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/greenTitles"
         android:inputType="number"
         android:layout_marginHorizontal="16dp"/>
 
@@ -52,7 +52,7 @@
         android:id="@+id/month_equivalence"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/greenTitles"
         android:text="Sessions per week"
 
         android:layout_marginHorizontal="20dp"/>
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Minutes / session"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/greenTitles"
         android:inputType="number"
         android:layout_marginTop="15dp"
         android:layout_marginHorizontal="16dp"/>
@@ -73,7 +73,7 @@
         android:id="@+id/duration_target_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/greenTitles"
         android:text="Session's duration in minutes"
         android:layout_marginHorizontal="20dp"/>
 
